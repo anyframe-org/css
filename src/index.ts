@@ -98,6 +98,75 @@ export class AnyCSS {
     return new this.engine(merge(this.tuiConfig, inputConfig))
   }
 
+  public generateRulesFromClass(classNames: string | string[]) {
+    const processedStyles = new Map<string, string>()
+
+    const classList = Array.isArray(classNames) ? classNames : classNames.split(/\s+/)
+
+    classList.forEach((className) => {
+      if (!className) return
+
+      const aliasResult = this.main.processAlias(className)
+      if (aliasResult) {
+        const { cssRules } = aliasResult
+        if (typeof cssRules === 'string') {
+          processedStyles.set(cssRules, '')
+        } else if (Array.isArray(cssRules)) {
+          cssRules.forEach((rule) => processedStyles.set(rule, ''))
+        }
+        return
+      }
+
+      const parsed = this.main.parse(className)
+      if (!parsed) return
+
+      const [, type, value, unit, secValue, secUnit] = parsed
+
+      const isHyphen = !className.includes((type || '') + (value || ''))
+
+      const shouldClasses = this.main.processCustomClass(
+        type,
+        value,
+        unit,
+        undefined,
+        secValue,
+        secUnit,
+        isHyphen
+      )
+      if (shouldClasses) {
+        const { cssRules } = shouldClasses
+        if (typeof cssRules === 'string') {
+          processedStyles.set(cssRules, '')
+        } else if (Array.isArray(cssRules)) {
+          cssRules.forEach((rule) => processedStyles.set(rule, ''))
+        }
+        return
+      }
+
+      const result = this.main.processShorthand(
+        type,
+        value!,
+        unit,
+        undefined,
+        secValue,
+        secUnit,
+        isHyphen
+      )
+      if (result) {
+        const { cssRules, value: ruleValue } = result
+        const finalValue = ruleValue !== null ? `: ${ruleValue}` : ''
+
+        if (typeof cssRules === 'string') {
+          processedStyles.set(cssRules, finalValue)
+        } else if (Array.isArray(cssRules)) {
+          cssRules.forEach((rule) => processedStyles.set(this.toKebabCase(rule), finalValue))
+        }
+      }
+    })
+
+    return new Set([...processedStyles.entries()].map(([prop, val]) => `${prop}${val}`))
+  }
+
   /**
    * Prefix handling methods
    */
