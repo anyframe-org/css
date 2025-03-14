@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import path from 'node:path'
 
 export default defineConfig({
   build: {
@@ -18,6 +19,14 @@ export default defineConfig({
         },
         exports: 'named'
       }
+    }
+  },
+  resolve: {
+    alias: {
+      '@app':  path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './src'),
+      '@types': path.resolve(__dirname,  './src/types'),
+
     }
   }
 })

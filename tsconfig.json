@@ -9,7 +9,13 @@
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "moduleResolution": "bundler",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@app/*": ["./*"],
+      "@/*": ["./src/*"],
+      "@types/*": ["./src/types/*"],
+      "@types": ["./src/types/index.ts"],
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

@@ -12,6 +12,9 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
     devDependencies:
+      '@nousantx/color-generator':
+        specifier: ^1.6.0
+        version: 1.6.0
       '@nousantx/someutils':
         specifier: ^0.7.0
         version: 0.7.0
@@ -19,8 +22,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       '@tenoxui/moxie':
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.3.3
+        version: 0.3.3
       typescript:
         specifier: ^5.7.3
         version: 5.8.2
@@ -186,6 +189,10 @@ packages:
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
 
+  '@nousantx/color-generator@1.6.0':
+    resolution: {integrity: sha512-Tqstm+SYi5NzQfEA2gQCA6RFTnbM9T6WWGnsVphjAx0CYA2swQAKdAkx9O4Yc6WO6UE1o+qmAzETGlt4fzDg3g==}
+    hasBin: true
+
   '@nousantx/someutils@0.7.0':
     resolution: {integrity: sha512-8gvUgjFSZRtOZFCyKgK1UhbCOrr1oSF/KC/yl/JbpBAIuWA9BVSQpLyT18aN3HEuSgW3Ru5Aq1cccbTKHg7pYQ==}
 
@@ -287,8 +294,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@tenoxui/moxie@0.3.1':
-    resolution: {integrity: sha512-ZvsNZk26h6fvQaxgEnH5A/T9vejGA79UtlsFAXpwCGmp2Y/fE6RVy6Ku/Tezhtty6joreU9wcnj8hv7E3zfqNg==}
+  '@tenoxui/moxie@0.3.3':
+    resolution: {integrity: sha512-jSt/1EhCv0JW2ezyTErovZfTEfO7UvaSvbBc/4/ozUrJe37vJkRB4/AJqnVlolIvCEIk4Ek1h6HJn4mmygnyxw==}
 
   '@tenoxui/types@0.1.2':
     resolution: {integrity: sha512-Vvmcj5qN9qqEnGjBx3S3fQD3yty2RdMG2qtssQywBdEbX9ast1nuHCe60ML4q3+40Dfz2LMRh4Ny7vzGta5xPA==}
@@ -600,6 +607,8 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
+  '@nousantx/color-generator@1.6.0': {}
+
   '@nousantx/someutils@0.7.0':
     dependencies:
       '@tenoxui/types': 0.1.2
@@ -665,7 +674,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.35.0':
     optional: true
 
-  '@tenoxui/moxie@0.3.1':
+  '@tenoxui/moxie@0.3.3':
     dependencies:
       '@tenoxui/types': 0.1.2
 

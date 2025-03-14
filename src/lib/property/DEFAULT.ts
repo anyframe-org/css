@@ -1,6 +1,4 @@
 import type { Property } from '@tenoxui/moxie'
-import type { Keys } from '../types'
-import { is } from '@nousantx/someutils'
 
 export const defaultProperty: Property = {
   columns: 'columns',
@@ -50,29 +48,4 @@ export const defaultProperty: Property = {
 
   filter: 'filter',
   'backdrop-filter': 'backdropFilter'
-}
-
-export const properties = ({ sizing }: { sizing: number }): Property => {
-  return {
-    ...defaultProperty,
-    w: {
-      group: 'container-size',
-      property: ({ key = '' }) => {
-        const keys: Keys = {
-          min: 'minWidth',
-          max: 'maxWidth'
-        }
-
-        return keys[key] || 'width'
-      },
-      value: ({ value = '', unit = '' }) => {
-        let finalValue
-
-        if (is.number.test(value + unit)) finalValue = sizing * Number(value) + 'rem'
-        else finalValue = is.length.test(value) ? value : value + unit
-
-        return finalValue
-      }
-    } as any
-  }
 }
