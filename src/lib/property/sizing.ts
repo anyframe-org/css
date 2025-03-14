@@ -17,12 +17,14 @@ const sizingPropertyMap: Record<string, GetCSSProperty> = {
   gap: 'gap',
   'gap-x': 'columnGap',
   'gap-y': 'rowGap',
+  m: 'margin',
   mt: 'marginTop',
   mr: 'marginRight',
   mb: 'marginBottom',
   ml: 'marginLeft',
   mx: 'marginInline',
   my: 'marginBlock',
+  p: 'padding',
   pt: 'paddingTop',
   pr: 'paddingRight',
   pb: 'paddingBottom',
@@ -33,7 +35,8 @@ const sizingPropertyMap: Record<string, GetCSSProperty> = {
 
 export const sizingProperty = (sizing: number): Property => {
   const value: ValuePropType = ({ value = '', unit = '' }) => {
-    if (is.number.test(value + unit)) return sizing * Number(value) + 'rem'
+    if (is.number.test(value + unit))
+      return value + unit !== '0' ? sizing * Number(value) + 'rem' : '0'
     return is.length.test(value) ? value : value + unit
   }
 
