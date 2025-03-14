@@ -53,7 +53,7 @@ export class AnyCSS {
       ...breakpoints
     }
 
-    this.property = { ...(defaultProperties({ sizing,  }) as Property), ...property }
+    this.property = { ...(defaultProperties({ sizing }) as Property), ...property }
     this.classes = merge(defaultClasses, classes)
     this.aliases = { ...defaultAlias, ...aliases }
     this.values = merge(
@@ -89,8 +89,8 @@ export class AnyCSS {
     const spaces = ' '.repeat(fixedTabs ? size : this.tabSize)
     return str
       .split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => `${spaces}${line}`)
+      .filter((line) => line.trim() !== '')
+      .map((line) => `${spaces}${line}`)
       .join('\n')
   }
 
@@ -253,7 +253,7 @@ export class AnyCSS {
   public render(classNames: string | string[]): string {
     return this.main
       .process(classNames)
-      .map(item => this.generate(item))
+      .map((item) => this.generate(item))
       .join('\n')
   }
 }

@@ -1,5 +1,5 @@
 import type { GetCSSProperty } from '@tenoxui/types'
-import type {  Property } from '@tenoxui/moxie'
+import type { Property } from '@tenoxui/moxie'
 import { is } from '@nousantx/someutils'
 import { createColor } from '@/utils/createColorValue'
 

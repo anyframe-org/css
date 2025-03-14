@@ -4,5 +4,5 @@ export const createColor = (value: string, secondValue?: string, secondUnit?: st
       ? 'currentColor'
       : value
     : value.includes('(') && value.endsWith(')')
-    ? `${value.slice(0, -1)}${secondValue ? ' / ' + secondValue + (secondUnit || '%)') : ')'}`
-    : value + secondValue
+      ? `${value.slice(0, -1)}${secondValue ? ' / ' + secondValue + (secondUnit || '%)') : ')'}`
+      : value + secondValue

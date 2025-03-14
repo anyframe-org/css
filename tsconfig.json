@@ -14,7 +14,7 @@
       "@app/*": ["./*"],
       "@/*": ["./src/*"],
       "@types/*": ["./src/types/*"],
-      "@types": ["./src/types/index.ts"],
+      "@types": ["./src/types/index.ts"]
     }
   },
   "include": ["src"],

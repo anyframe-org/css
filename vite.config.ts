@@ -23,10 +23,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@app':  path.resolve(__dirname, './'),
+      '@app': path.resolve(__dirname, './'),
       '@': path.resolve(__dirname, './src'),
-      '@types': path.resolve(__dirname,  './src/types'),
-
+      '@types': path.resolve(__dirname, './src/types')
     }
   }
 })

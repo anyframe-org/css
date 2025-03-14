@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Lightweight** - 
+- **Lightweight** -
 
 - **Smart Engine** - Use single shorthand such as `text-*` for `color`, `font-size`, `line-height`, and more.
 
