@@ -1,6 +1,6 @@
 import type { ProcessedStyle, Property } from '@tenoxui/moxie'
 import type { Values, Classes, Aliases } from '@tenoxui/types'
-import type { Variants, Breakpoints, TenoxUIConfig, Config } from './types'
+import type { Variants, Breakpoints, TenoxUIConfig, Config, ApplyStyleObject } from './types'
 import Moxie from '@tenoxui/moxie'
 import { merge } from '@nousantx/someutils'
 
@@ -22,8 +22,14 @@ export class AnyCSS {
   private classes: Classes
   private aliases: Aliases
   private breakpoints: Breakpoints
+  private useLayer: boolean
   private tabSize: number
   private tuiConfig: TenoxUIConfig
+  private layerOrder: string[]
+  private themeConfig: ApplyStyleObject
+  private baseConfig: ApplyStyleObject
+  private componentsConfig: ApplyStyleObject
+  private layers: Map<string, string>
 
   constructor({
     sizing = 0.25,
@@ -31,6 +37,7 @@ export class AnyCSS {
     colors = {},
     tabSize = 2,
     showLayerModifier = true,
+    layerOrder = ['theme', 'base', 'components', 'utilities'],
     variants = {},
     customVariants = {},
     property = {},
@@ -38,9 +45,13 @@ export class AnyCSS {
     classes = {},
     aliases = {},
     breakpoints = {},
+    theme = {},
+    base = {},
+    components = {},
     moxie = Moxie
   }: Partial<Config> = {}) {
     this.tabSize = tabSize
+    this.useLayer = showLayerModifier
     this.engine = moxie
     this.variants = { ...defaultVariants, ...variants }
     this.customVariants = customVariants
@@ -52,6 +63,16 @@ export class AnyCSS {
       '2xl': '96rem',
       ...breakpoints
     }
+    this.layerOrder = layerOrder
+    this.themeConfig = theme
+    this.baseConfig = base
+    this.componentsConfig = components
+    this.layers = new Map<string, string>([
+      ['theme', ''],
+      ['base', ''],
+      ['components', ''],
+      ['utilities', '']
+    ])
 
     this.property = { ...(defaultProperties({ sizing }) as Property), ...property }
     this.classes = merge(defaultClasses, classes)
@@ -99,77 +120,57 @@ export class AnyCSS {
   }
 
   public generateRulesFromClass(classNames: string | string[]) {
-    const processedStyles = new Map<string, string>()
+    return this.main
+      .process(classNames)
+      .map((item) => this.generate(item, true))
+      .join('\n')
+  }
 
-    const classList = Array.isArray(classNames) ? classNames : classNames.split(/\s+/)
+  public getConfig() {
+    return this.tuiConfig
+  }
 
-    classList.forEach((className) => {
-      if (!className) return
-
-      const aliasResult = this.main.processAlias(className)
-      if (aliasResult) {
-        const { cssRules } = aliasResult
-        if (typeof cssRules === 'string') {
-          processedStyles.set(cssRules, '')
-        } else if (Array.isArray(cssRules)) {
-          cssRules.forEach((rule) => processedStyles.set(rule, ''))
-        }
-        return
-      }
-
-      const parsed = this.main.parse(className)
-      if (!parsed) return
-
-      const [, type, value, unit, secValue, secUnit] = parsed
-
-      const isHyphen = !className.includes((type || '') + (value || ''))
-
-      const shouldClasses = this.main.processCustomClass(
-        type,
-        value,
-        unit,
-        undefined,
-        secValue,
-        secUnit,
-        isHyphen
-      )
-      if (shouldClasses) {
-        const { cssRules } = shouldClasses
-        if (typeof cssRules === 'string') {
-          processedStyles.set(cssRules, '')
-        } else if (Array.isArray(cssRules)) {
-          cssRules.forEach((rule) => processedStyles.set(rule, ''))
-        }
-        return
-      }
-
-      const result = this.main.processShorthand(
-        type,
-        value!,
-        unit,
-        undefined,
-        secValue,
-        secUnit,
-        isHyphen
-      )
-      if (result) {
-        const { cssRules, value: ruleValue } = result
-        const finalValue = ruleValue !== null ? `: ${ruleValue}` : ''
-
-        if (typeof cssRules === 'string') {
-          processedStyles.set(cssRules, finalValue)
-        } else if (Array.isArray(cssRules)) {
-          cssRules.forEach((rule) => processedStyles.set(this.toKebabCase(rule), finalValue))
-        }
-      }
-    })
-
-    return new Set([...processedStyles.entries()].map(([prop, val]) => `${prop}${val}`))
+  public getLayerStyle() {
+    return {
+      base: this.baseConfig,
+      theme: this.themeConfig,
+      components: this.componentsConfig
+    }
   }
 
   /**
-   * Prefix handling methods
+   * Layer Modifier
    */
+
+  public addLayer(layerName: string): this {
+    if (!this.layers.has(layerName)) {
+      this.layers.set(layerName, '')
+      if (!this.layerOrder.includes(layerName)) {
+        this.layerOrder.push(layerName)
+      }
+    }
+    return this
+  }
+
+  public removeLayer(layerName: string): this {
+    if (layerName !== 'base' && layerName !== 'theme') {
+      this.layers.delete(layerName)
+      this.layerOrder = this.layerOrder.filter((layer) => layer !== layerName)
+    }
+    return this
+  }
+
+  public setLayerOrder(order: string[]): this {
+    const existingLayers = Array.from(this.layers.keys())
+    const missingLayers = existingLayers.filter((layer) => !order.includes(layer))
+    this.layerOrder = [...order, ...missingLayers]
+    return this
+  }
+
+  /**
+   * Prefix Handling Methods
+   */
+
   private getPseudoSyntax(prefix: string): string {
     const doubleColonPrefixes = [
       'after',
@@ -230,7 +231,8 @@ export class AnyCSS {
   /**
    * Formats CSS rules from cssRules and value
    */
-  private formatRules(cssRules: string | string[], value: any): string {
+
+  private formatRules(cssRules: string | string[], value: string | null): string {
     if (Array.isArray(cssRules) && value !== null) {
       return cssRules
         .map((prop: string) =>
@@ -246,6 +248,7 @@ export class AnyCSS {
   /**
    * Creates the CSS selector string
    */
+
   private createSelector(
     className: string,
     prefix: string | null | undefined,
@@ -261,7 +264,13 @@ export class AnyCSS {
   /**
    * Generates the CSS wrapper based on prefix type
    */
-  private generateCSSWrapper(prefix: string, rules: string, finalValue: string): string {
+
+  private generateCSSWrapper(
+    prefix: string,
+    rules: string,
+    finalValue: string,
+    indent: number = 0
+  ): string {
     // Handle custom prefixes
     if (this.isCustomPrefix(prefix)) {
       const moxieRule = this.processCustomPrefix(prefix)
@@ -289,12 +298,12 @@ export class AnyCSS {
     // Handle breakpoints
     const breakpointQuery = this.getBreakpointQuery(prefix)
     if (breakpointQuery) {
-      return `${breakpointQuery} {\n    ${rules}${finalValue}\n  }`
+      return `${breakpointQuery} {\n${this.addTabs(rules + finalValue, this.tabSize, true)}\n}`
     }
 
     // Handle variants
     if (this.variants[prefix]) {
-      return `${this.variants[prefix]} {\n    ${rules}${finalValue}\n  }`
+      return `${this.variants[prefix]} {\n    ${rules}${finalValue}\n}`
     }
 
     // Handle pseudo-elements/classes
@@ -305,25 +314,100 @@ export class AnyCSS {
   /**
    * Main Generator
    */
-  public generate(item: ProcessedStyle, custom?: boolean): string {
+
+  private processApplyObject(obj: ApplyStyleObject, indentLevel: number = 0): string {
+    let css = ''
+
+    if (obj.SINGLE_RULE) {
+      css += obj.SINGLE_RULE.join('\n') + '\n'
+      delete obj.SINGLE_RULE
+    }
+
+    for (const key in obj) {
+      const value = obj[key]
+      css += key ? `${this.addTabs(key, this.tabSize * indentLevel, true)} {\n` : ''
+
+      if (typeof value === 'string') {
+        const rules = this.generateRulesFromClass(value)
+        css += `${this.addTabs(rules, this.tabSize * (key ? indentLevel + 1 : indentLevel), true)}`
+        if (rules.length) css += '\n'
+      } else if (typeof value === 'object') {
+        css += this.processApplyObject(value, indentLevel + 1)
+      }
+
+      css += key ? `${this.addTabs('}', this.tabSize * indentLevel, true)}\n` : ''
+    }
+
+    return css
+  }
+
+  public generate(item: ProcessedStyle, rulesOnly?: boolean, custom?: boolean): string {
     const { className, cssRules, value, prefix } = item
     const selector = this.createSelector(className, prefix, custom)
     const rules = this.formatRules(cssRules, value)
     const finalValue = Array.isArray(cssRules) || value === null ? '' : `: ${value}`
 
     if (!prefix) {
-      return `${selector} {\n  ${rules}${finalValue}\n}`
+      return rulesOnly
+        ? rules + finalValue + ';'
+        : `${selector} {\n${this.addTabs(rules + finalValue, this.tabSize)}\n}`
     }
 
     const cssWrapper = this.generateCSSWrapper(prefix, rules, finalValue)
-    return `${selector} {\n  ${cssWrapper}\n}`
+    return rulesOnly ? cssWrapper : `${selector} {\n${this.addTabs(cssWrapper, this.tabSize)}\n}`
   }
 
-  public render(classNames: string | string[]): string {
-    return this.main
-      .process(classNames)
-      .map((item) => this.generate(item))
-      .join('\n')
+  public addStyle(layer: string = 'base', config: ApplyStyleObject = {}): this {
+    if (!this.layers.has(layer)) {
+      this.addLayer(layer)
+    }
+
+    const ui = this.processApplyObject(config)
+    const currentStyles = this.layers.get(layer) || ''
+
+    this.layers.set(layer, currentStyles + ui)
+
+    return this
+  }
+
+  public createStyles(finalUtilities: string = ''): string {
+    const existingLayers = Array.from(this.layers.keys())
+    const orderedLayers = this.layerOrder.filter((layer) => existingLayers.includes(layer))
+
+    // If layering is enabled, wrap the layers declaration
+    let styles = this.useLayer ? `@layer ${orderedLayers.join(', ')};\n` : ''
+
+    orderedLayers.forEach((layer) => {
+      // If the layer's configuration is not empty, generate its styles
+      if (
+        (this as any)[`${layer}Config`] &&
+        Object.entries((this as any)[`${layer}Config`]).length > 0
+      )
+        this.addStyle(layer, (this as any)[`${layer}Config`])
+
+      let layerStyles = this.layers.get(layer) || ''
+
+      if (layer === 'utilities' && finalUtilities.trim()) {
+        layerStyles += layerStyles !== '' ? '\n' : '' + `${finalUtilities}`
+      }
+
+      if (layerStyles.trim()) {
+        styles += this.useLayer
+          ? `@layer ${layer} {\n${this.addTabs(layerStyles)}\n}\n`
+          : layerStyles
+      }
+    })
+
+    return styles
+  }
+
+  public render(classNames: string | string[] = ''): string {
+    return this.createStyles(
+      this.main
+        .process(classNames)
+        .map((item) => this.generate(item))
+        .join('\n')
+    )
   }
 }
 

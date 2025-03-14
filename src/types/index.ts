@@ -12,6 +12,11 @@ export type Keys = {
   [name: string]: string
 }
 export type ColorFormat = 'hsl' | 'rgb' | 'hwb' | 'lab' | 'lch' | 'oklch'
+export type ApplyStyleObject = {
+  SINGLE_RULE?: string[]
+} & {
+  [key in Exclude<string, 'SINGLE_RULE'>]?: string | ApplyStyleObject
+}
 
 export interface TenoxUIConfig {
   property?: Property
@@ -26,8 +31,12 @@ export interface Config extends TenoxUIConfig {
   colors: { [name: string]: string }
   tabSize: number
   showLayerModifier: boolean
+  layerOrder: string[]
   variants: Variants
   customVariants: Property
   breakpoints: Breakpoints
+  base: ApplyStyleObject
+  theme: ApplyStyleObject
+  components: ApplyStyleObject
   moxie: typeof Moxie
 }
