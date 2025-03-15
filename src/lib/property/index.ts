@@ -5,6 +5,7 @@ import { backgroundProperty } from './background'
 import { typographyProperty } from './typography'
 import { borderProperty } from './border'
 import { shadowProperty } from './shadow'
+import { transitionProperty } from './transition'
 
 export const properties = ({ sizing }: { sizing: number }): Property => {
   return {
@@ -13,6 +14,7 @@ export const properties = ({ sizing }: { sizing: number }): Property => {
     ...(backgroundProperty as Property),
     ...(typographyProperty(sizing) as Property),
     ...(borderProperty(sizing) as Property),
-    ...(shadowProperty as Property)
+    ...(shadowProperty as Property),
+    ...(transitionProperty as Property)
   }
 }
