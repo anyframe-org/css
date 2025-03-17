@@ -1,4 +1,4 @@
-import type { Property } from '@/types/property'
+import type { Property } from '@tenoxui/moxie'
 import { defaultProperty } from './DEFAULT'
 import { sizingProperty } from './sizing'
 import { backgroundProperty } from './background'
