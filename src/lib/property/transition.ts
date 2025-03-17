@@ -1,5 +1,6 @@
-import { is } from '@nousantx/someutils'
 import type { Property } from '@tenoxui/moxie'
+import type { GetCSSProperty } from '@tenoxui/types'
+import { is } from '@nousantx/someutils'
 
 export const transitionProperty: Property = {
   transition: {

@@ -9,10 +9,6 @@ export const defaultProperty: Property = {
   isolation: 'isolation',
   order: 'order',
   z: 'zIndex',
-  opacity: {
-    property: 'opacity',
-    value: '{0}%'
-  },
   'outline-offset': {
     property: 'outlineOffset',
     value: '{0}px'
@@ -46,6 +42,10 @@ export const defaultProperty: Property = {
   'auto-cols': 'gridAutoColumns',
   'auto-rows': 'gridAutoRows',
 
+  opacity: 'opacity',
   filter: 'filter',
-  'backdrop-filter': 'backdropFilter'
+  'backdrop-filter': 'backdropFilter',
+
+  resize: 'resize',
+  visibility: 'visibility'
 }

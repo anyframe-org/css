@@ -45,33 +45,33 @@ export const typographyProperty = (sizing: number): Property => ({
           is.color.test(value) ||
           ['inherit', 'current', 'black', 'white', 'transparent'].includes(value)
         ) {
-          return `color: ${createColor(value, secondValue, secondUnit)}` as GetCSSProperty
+          return `value:color: ${createColor(value, secondValue, secondUnit)}` as GetCSSProperty
         } else if (
           key === 'align' ||
           ['center', 'justify', 'left', 'right', 'start', 'end'].includes(value)
         ) {
-          return `text-align: ${value}` as GetCSSProperty
+          return `value:text-align: ${value}` as GetCSSProperty
         } else if (key === 'wrap' || ['wrap', 'nowrap', 'balance', 'pretty'].includes(value)) {
-          return `text-wrap: ${value}` as GetCSSProperty
+          return `value:text-wrap: ${value}` as GetCSSProperty
         } else if (key === 'overflow' || ['ellipsis', 'clip'].includes(value)) {
-          return `text-overflow: ${value}` as GetCSSProperty
+          return `value:text-overflow: ${value}` as GetCSSProperty
         } else if (key === 'size' || is.length.test(value + unit) || value + unit in sizes) {
           if (value + unit in sizes) {
             const sizeKey = (value + unit) as keyof SizesType
 
             const [fontSize, lineHeight] = sizes[sizeKey]
-            return `font-size: ${fontSize}; line-height: ${
+            return `value:font-size: ${fontSize}; line-height: ${
               lineHeightAlias[secondValue] || secondValue + secondUnit || lineHeight
             }` as GetCSSProperty
           }
-          return `font-size: ${value + unit}${
+          return `value:font-size: ${value + unit}${
             secondValue
               ? `; line-height: ${lineHeightAlias[secondValue] || secondValue + secondUnit}`
               : ''
           }` as GetCSSProperty
         }
       }
-      return ('color: ' + value) as GetCSSProperty
+      return ('value:color: ' + value) as GetCSSProperty
     },
     value: null
   },
@@ -97,12 +97,12 @@ export const typographyProperty = (sizing: number): Property => ({
           is.number.test(value) ||
           value.endsWith('00')
         ) {
-          return `font-weight: ${weightAlias[value] || value}` as GetCSSProperty
+          return `value:font-weight: ${weightAlias[value] || value}` as GetCSSProperty
         } else if (key === 'family') {
-          return `font-family: ${value}` as GetCSSProperty
+          return `value:font-family: ${value}` as GetCSSProperty
         }
       }
-      return `font-family: ${value}` as GetCSSProperty
+      return `value:font-family: ${value}` as GetCSSProperty
 
       // return `font-weight: ${weightAlias[value] || value}` as GetCSSProperty
     }
@@ -133,7 +133,8 @@ export const typographyProperty = (sizing: number): Property => ({
         relaxed: '1.625',
         loose: '2'
       }
-      if (values[value]) {
+      if (value === '0') return value
+      else if (values[value]) {
         return values[value]
       } else if (!unit && is.number.test(value)) {
         return sizing * Number(value) + 'rem'
@@ -146,7 +147,7 @@ export const typographyProperty = (sizing: number): Property => ({
     property: ({ key, value = '', unit = '', secondValue = '', secondUnit = '' }) => {
       if (value) {
         if (key === 'color' || is.color.test(value)) {
-          return ('text-decoration-color: ' +
+          return ('value:text-decoration-color: ' +
             `${value.slice(0, -1)}${
               secondValue ? ' / ' + secondValue + (secondUnit || '%)') : ')'
             }`) as GetCSSProperty
@@ -154,20 +155,20 @@ export const typographyProperty = (sizing: number): Property => ({
           key === 'style' ||
           ['solid', 'dashed', 'double', 'dotted', 'wavy'].includes(value)
         ) {
-          return `text-decoration-style: ${value}` as GetCSSProperty
+          return `value:text-decoration-style: ${value}` as GetCSSProperty
         } else if (
           key === 'length' ||
           ['auto', 'from-font'].includes(value) ||
           is.number.test(value + unit) ||
           is.length.test(value + unit)
         ) {
-          return `text-decoration-thickness: ${
+          return `value:text-decoration-thickness: ${
             is.number.test(value + unit) ? value + 'px' : value + unit
           }` as GetCSSProperty
         }
       }
 
-      return ('text-decoration-color: ' + value) as GetCSSProperty
+      return ('value:text-decoration-color: ' + value) as GetCSSProperty
     },
     value: null
   },
@@ -179,7 +180,8 @@ export const typographyProperty = (sizing: number): Property => ({
     property: 'textIndent',
     value: ({ value = '', unit = '' }) => {
       if (value) {
-        if (is.number.test(value + unit)) return sizing * Number(value) + 'rem'
+        if (value === '0') return value
+        else if (is.number.test(value + unit)) return sizing * Number(value) + 'rem'
         else return value + unit
       }
       return null
