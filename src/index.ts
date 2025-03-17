@@ -10,6 +10,7 @@ import { values as defaultValues } from './lib/value'
 import { classes as defaultClasses } from './lib/classes'
 import { alias as defaultAlias } from './lib/alias'
 import { colorLib } from './lib/color'
+import { resetter, variables } from './style'
 
 export class AnyCSS {
   private main: Moxie
@@ -22,6 +23,7 @@ export class AnyCSS {
   private classes: Classes
   private aliases: Aliases
   private breakpoints: Breakpoints
+  private useResetter: boolean
   private useLayer: boolean
   private tabSize: number
   private tuiConfig: TenoxUIConfig
@@ -36,7 +38,8 @@ export class AnyCSS {
     colorVariant = 'oklch',
     colors = {},
     tabSize = 2,
-    showLayerModifier = true,
+    showLayerDirective = false,
+    preflight = false,
     layerOrder = ['theme', 'base', 'components', 'utilities'],
     variants = {},
     customVariants = {},
@@ -48,10 +51,12 @@ export class AnyCSS {
     theme = {},
     base = {},
     components = {},
-    moxie = Moxie
+    moxie = Moxie,
+    moxieOptions = {}
   }: Partial<Config> = {}) {
     this.tabSize = tabSize
-    this.useLayer = showLayerModifier
+    this.useLayer = showLayerDirective
+    this.useResetter = preflight
     this.engine = moxie
     this.variants = { ...defaultVariants, ...variants }
     this.customVariants = customVariants
@@ -63,7 +68,7 @@ export class AnyCSS {
       '2xl': '96rem',
       ...breakpoints
     }
-    this.layerOrder = layerOrder
+    this.layerOrder = this.useResetter ? ['preflight', ...layerOrder] : layerOrder
     this.themeConfig = theme
     this.baseConfig = base
     this.componentsConfig = components
@@ -87,10 +92,10 @@ export class AnyCSS {
     )
 
     this.tuiConfig = {
+      ...moxieOptions,
       property: this.property,
       values: this.values,
-      classes: this.classes,
-      aliases: this.aliases
+      classes: this.classes
     }
 
     this.main = new this.engine(this.tuiConfig)
@@ -120,6 +125,13 @@ export class AnyCSS {
   }
 
   public generateRulesFromClass(classNames: string | string[]) {
+    if (typeof classNames === 'string' && this.aliases[classNames]) {
+      return this.main
+        .process(this.aliases[classNames])
+        .map((item) => this.generate(item, true))
+        .join('\n')
+    }
+
     return this.main
       .process(classNames)
       .map((item) => this.generate(item, true))
@@ -136,6 +148,15 @@ export class AnyCSS {
       theme: this.themeConfig,
       components: this.componentsConfig
     }
+  }
+
+  public getAliases(): Aliases {
+    return this.aliases
+  }
+
+  public addAliases(newAliases: Aliases): this {
+    this.aliases = { ...this.aliases, ...newAliases }
+    return this
   }
 
   /**
@@ -271,7 +292,6 @@ export class AnyCSS {
     finalValue: string,
     indent: number = 0
   ): string {
-    // Handle custom prefixes
     if (this.isCustomPrefix(prefix)) {
       const moxieRule = this.processCustomPrefix(prefix)
       if (moxieRule && typeof moxieRule === 'string') {
@@ -279,7 +299,7 @@ export class AnyCSS {
           const actualRule = moxieRule.substring(6)
 
           if (actualRule.startsWith('@media')) {
-            return `${actualRule} {\n    ${rules}${finalValue}\n  }`
+            return `${actualRule} {\n${rules}${finalValue}\n  }`
           }
           return `${actualRule} { ${rules}${finalValue} }`
         }
@@ -303,7 +323,7 @@ export class AnyCSS {
 
     // Handle variants
     if (this.variants[prefix]) {
-      return `${this.variants[prefix]} {\n    ${rules}${finalValue}\n}`
+      return `${this.variants[prefix]} {\n${this.addTabs(rules + finalValue)}\n}`
     }
 
     // Handle pseudo-elements/classes
@@ -371,14 +391,16 @@ export class AnyCSS {
   }
 
   public createStyles(finalUtilities: string = ''): string {
+    if (this.useResetter) {
+      this.addStyle('preflight', { ...variables, ...resetter })
+    }
+
     const existingLayers = Array.from(this.layers.keys())
     const orderedLayers = this.layerOrder.filter((layer) => existingLayers.includes(layer))
 
-    // If layering is enabled, wrap the layers declaration
     let styles = this.useLayer ? `@layer ${orderedLayers.join(', ')};\n` : ''
 
     orderedLayers.forEach((layer) => {
-      // If the layer's configuration is not empty, generate its styles
       if (
         (this as any)[`${layer}Config`] &&
         Object.entries((this as any)[`${layer}Config`]).length > 0
@@ -402,13 +424,30 @@ export class AnyCSS {
   }
 
   public render(classNames: string | string[] = ''): string {
-    return this.createStyles(
-      this.main
-        .process(classNames)
-        .map((item) => this.generate(item))
-        .join('\n')
-    )
+    if (!classNames) return this.createStyles()
+
+    const classes = Array.isArray(classNames) ? classNames : classNames.split(/\s+/).filter(Boolean)
+
+    let utilityStyles = ''
+    let aliasStyles = ''
+
+    classes.forEach((className) => {
+      if (this.aliases[className]) {
+        aliasStyles += `.${className} {\n${this.addTabs(
+          this.generateRulesFromClass(this.aliases[className])
+        )}\n}\n`
+      } else {
+        const processedStyles = this.main
+          .process(className)
+          .map((item) => this.generate(item))
+          .join('\n')
+
+        if (processedStyles) {
+          utilityStyles += processedStyles + '\n'
+        }
+      }
+    })
+
+    return this.createStyles(utilityStyles + aliasStyles)
   }
 }
-
-export default AnyCSS
