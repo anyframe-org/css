@@ -12,7 +12,7 @@ export const borderProperty = (sizing: number): Property => {
       property: ({ value = '', unit = '', key = '', secondValue = '', secondUnit = '' }) => {
         const keys: Record<string, string> = {
           x: 'border-inline-width',
-          y: 'border-block-eidth',
+          y: 'border-block-width',
           t: 'border-top-width',
           r: 'border-right-width',
           b: 'border-bottom-width',
