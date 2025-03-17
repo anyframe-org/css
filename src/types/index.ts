@@ -1,4 +1,4 @@
-import type { Property } from '@tenoxui/moxie'
+import type { Property, Config as MoxieOptions } from '@tenoxui/moxie'
 import type { Values, Classes, Aliases } from '@tenoxui/types'
 import { TenoxUI as Moxie } from '@tenoxui/moxie'
 
@@ -30,7 +30,8 @@ export interface Config extends TenoxUIConfig {
   colorVariant: ColorFormat
   colors: { [name: string]: string }
   tabSize: number
-  showLayerModifier: boolean
+  showLayerDirective: boolean
+  preflight: boolean
   layerOrder: string[]
   variants: Variants
   customVariants: Property
@@ -39,4 +40,5 @@ export interface Config extends TenoxUIConfig {
   theme: ApplyStyleObject
   components: ApplyStyleObject
   moxie: typeof Moxie
+  moxieOptions: MoxieOptions
 }
