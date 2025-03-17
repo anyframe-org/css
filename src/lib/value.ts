@@ -39,5 +39,9 @@ export const values: Values = {
     '5xl': '64rem' /* 1024px */,
     '6xl': '72rem' /* 1152px */,
     '7xl': '80rem' /* 1280px */
-  }
+  },
+  'default-font-family':
+    "var(--default-font-family, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji')",
+  'default-font-mono':
+    "var(--default-font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace)"
 }
