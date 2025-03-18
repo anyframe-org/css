@@ -7,16 +7,12 @@ export default defineConfig({
     lib: {
       name: '__anyframe_css__',
       entry: './src/index.ts',
-      formats: ['es', 'iife', 'cjs', 'umd'],
-      fileName: (format) => `index.${format}${format !== 'cjs' ? '.js' : ''}`
+      formats: ['es', 'iife', 'cjs'],
+      fileName: (format) => `anycss.${format}.js`
     },
     sourcemap: true,
     rollupOptions: {
-      external: ['@tenoxui/static'],
       output: {
-        globals: {
-          '@tenoxui/static': '__tenoxui_static__'
-        },
         exports: 'named'
       }
     }
