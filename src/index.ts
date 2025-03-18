@@ -423,7 +423,7 @@ export class AnyCSS {
     return styles
   }
 
-  public render(classNames: string | string[] = ''): string {
+  public render(classNames?: string | string[]): string {
     if (!classNames) return this.createStyles()
 
     const classes = Array.isArray(classNames) ? classNames : classNames.split(/\s+/).filter(Boolean)
@@ -448,6 +448,8 @@ export class AnyCSS {
       }
     })
 
-    return this.createStyles(utilityStyles + aliasStyles)
+    return this.createStyles(aliasStyles + utilityStyles)
   }
 }
+
+export default AnyCSS
