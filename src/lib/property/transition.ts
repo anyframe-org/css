@@ -21,7 +21,7 @@ export const transitionProperty: Property = {
         else if (value === 'transform') finalValue = 'transform, translate, scale, rotate'
         else finalValue = value
 
-        return `value:transition-property: ${finalValue}; transition-timing-function: var(--default-transition-timing-function); transition-duration: var(--default-transition-duration)` as GetCSSProperty
+        return `value:transition-property: ${finalValue}; transition-duration: 150ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)` as GetCSSProperty
       } else if (key === 'behavior' || ['normal', 'discrete'].includes(value)) {
         return `value:transition-behavior: ${
           value === 'discrete' ? 'allow-discrete' : value
@@ -41,12 +41,12 @@ export const transitionProperty: Property = {
     property: 'transitionTimingFunction',
     value: ({ value = '' }) => {
       const values: Record<string, string> = {
-        in: 'var(--ease-in)',
-        out: 'var(--ease-out)',
-        'in-out': 'var(--ease-in-out)'
+        in: 'cubic-bezier(0.4, 0, 1, 1)',
+        out: 'cubic-bezier(0, 0, 0.2, 1)',
+        'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)'
       }
 
-      return values[value as string] || value
+      return values[value as string] || value || 'cubic-bezier(0.4, 0, 0.2, 1)'
     }
   },
   duration: {
