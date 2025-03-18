@@ -21,20 +21,20 @@ export const transitionProperty: Property = {
         else if (value === 'transform') finalValue = 'transform, translate, scale, rotate'
         else finalValue = value
 
-        return `transition-property: ${finalValue}; transition-timing-function: var(--default-transition-timing-function); transition-duration: var(--default-transition-duration)` as GetCSSProperty
+        return `value:transition-property: ${finalValue}; transition-timing-function: var(--default-transition-timing-function); transition-duration: var(--default-transition-duration)` as GetCSSProperty
       } else if (key === 'behavior' || ['normal', 'discrete'].includes(value)) {
-        return `transition-behavior: ${
+        return `value:transition-behavior: ${
           value === 'discrete' ? 'allow-discrete' : value
         }` as GetCSSProperty
       } else if (key === 'duration' || value === 'initial' || is.number.test(value)) {
-        return `transition-duration: ${
+        return `value:transition-duration: ${
           value === 'initial' ? 'initial' : value + (unit || 'ms')
         }` as GetCSSProperty
       } else if (key === 'delay')
-        return ('transition-delay: ' +
+        return ('value:transition-delay: ' +
           (is.time.test(value) ? value : value + (unit || 'ms'))) as GetCSSProperty
 
-      return ('transition: ' + value + unit) as GetCSSProperty
+      return ('value:transition: ' + value + unit) as GetCSSProperty
     }
   },
   ease: {
