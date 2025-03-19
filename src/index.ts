@@ -452,4 +452,5 @@ export class AnyCSS {
   }
 }
 
+export * from './types'
 export default AnyCSS
