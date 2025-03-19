@@ -33,7 +33,8 @@
   "exports": {
     ".": {
       "require": "./dist/anycss.cjs.js",
-      "import": "./dist/anycss.es.js"
+      "import": "./dist/anycss.es.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
