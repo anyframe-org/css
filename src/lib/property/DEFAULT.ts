@@ -47,5 +47,9 @@ export const defaultProperty: Property = {
   'backdrop-filter': 'backdropFilter',
 
   resize: 'resize',
-  visibility: 'visibility'
+  visibility: 'visibility',
+
+  overflow: 'overflow',
+  'overflow-x': 'overflowX',
+  'overflow-y': 'overflowY'
 }
