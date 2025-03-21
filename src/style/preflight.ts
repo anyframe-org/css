@@ -20,7 +20,7 @@ export const resetter: ApplyStyleObject = {
   body: 'leading-inherit',
   hr: 'h-0 text-inherit border-t-1',
   'abbr:where([title])': '[-webkit-text-decoration,text-decoration]-[underline_dotted]',
-  'h1, h2, h3, h4, h5, h6': 'text(size:inherit) leading-inherit',
+  'h1, h2, h3, h4, h5, h6': 'text-(size:inherit) leading-inherit',
   a: '[color,-webkit-text-decoration,text-decoration]-inherit',
   'b, strong': '[fontWeight]-bolder',
   'code, kbd, samp, pre':
