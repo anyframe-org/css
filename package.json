@@ -32,17 +32,17 @@
   "browser": "./dist/anycss.iife.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/anycss.cjs.js",
-      "import": "./dist/anycss.es.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/anycss.es.js"
     }
   },
   "scripts": {
     "dev": "vite build --watch",
+    "build": "vite build",
+    "build:prod": "pnpm type-check && pnpm build:force && pnpm build:types",
     "type-check": "tsc --noEmit",
-    "build": "pnpm type-check && vite build",
     "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
-    "build:all": "pnpm build && pnpm build:types",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -55,8 +55,8 @@
     "vite": "^6.1.0",
     "vitest": "^3.0.8"
   },
-  "packageManager": "pnpm@10.4.0",
   "dependencies": {
     "@tenoxui/types": "^0.1.2"
-  }
+  },
+  "packageManager": "pnpm@10.4.0"
 }
