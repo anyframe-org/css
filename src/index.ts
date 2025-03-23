@@ -456,5 +456,12 @@ export class AnyCSS {
   }
 }
 
+export { is, merge, transformClasses } from '@nousantx/someutils'
+export * from '@tenoxui/moxie'
 export * from './types'
+export { preflight } from './style/preflight'
+import { properties } from './lib/property'
+import { values } from './lib/value'
+import { classes } from './lib/classes'
+export { defaultColors as colors } from './lib/color'
 export default AnyCSS
