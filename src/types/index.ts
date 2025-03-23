@@ -36,6 +36,7 @@ export interface Config extends TenoxUIConfig {
   variants: Variants
   customVariants: Property
   breakpoints: Breakpoints
+  apply: ApplyStyleObject
   base: ApplyStyleObject
   theme: ApplyStyleObject
   components: ApplyStyleObject

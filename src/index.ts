@@ -28,6 +28,7 @@ export class AnyCSS {
   private tabSize: number
   private tuiConfig: TenoxUIConfig
   private layerOrder: string[]
+  private apply: ApplyStyleObject
   private themeConfig: ApplyStyleObject
   private baseConfig: ApplyStyleObject
   private componentsConfig: ApplyStyleObject
@@ -48,6 +49,7 @@ export class AnyCSS {
     classes = {},
     aliases = {},
     breakpoints = {},
+    apply = {},
     theme = {},
     base = {},
     components = {},
@@ -69,6 +71,7 @@ export class AnyCSS {
       ...breakpoints
     }
     this.layerOrder = this.useResetter ? ['preflight', ...layerOrder] : layerOrder
+    this.apply = apply
     this.themeConfig = theme
     this.baseConfig = base
     this.componentsConfig = components
@@ -410,7 +413,8 @@ export class AnyCSS {
       let layerStyles = this.layers.get(layer) || ''
 
       if (layer === 'utilities' && finalUtilities.trim()) {
-        layerStyles += layerStyles !== '' ? '\n' : '' + `${finalUtilities}`
+        layerStyles +=
+          layerStyles !== '' ? '\n' : '' + this.processApplyObject(this.apply) + `${finalUtilities}`
       }
 
       if (layerStyles.trim()) {
