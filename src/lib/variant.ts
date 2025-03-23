@@ -6,9 +6,9 @@ export const defaultVariants: Variants = {
 }
 
 export const defaultCustomVariants = {
-  support: ({ key, value }) => `value:@supports (${key}: ${value})`,
-  'not-support': ({ key, value }) => `value:@supports not (${key}: ${value})`,
-  nth: ({ value }) => `&:nth-child(${value})`,
-  min: ({ value, unit }) => `@media (width >= ${value}${unit})`,
-  max: ({ value, unit }) => `@media (width < ${value}${unit})`
+  supports: ({ key, value }) => `value:@supports (${key}: ${value})`,
+  'not-supports': ({ key, value }) => `value:@supports not (${key}: ${value})`,
+  nth: ({ value }) => `value:&:nth-child(${value})`,
+  min: ({ value, unit }) => `value:@media (width >= ${value}${unit})`,
+  max: ({ value, unit }) => `value:@media (width < ${value}${unit})`
 } as Property
