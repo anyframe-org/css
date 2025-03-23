@@ -118,8 +118,8 @@ export class AnyCSS {
     const spaces = ' '.repeat(fixedTabs ? size : this.tabSize)
     return str
       .split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => `${spaces}${line}`)
+      .filter((line) => line.trim() !== '')
+      .map((line) => `${spaces}${line}`)
       .join('\n')
   }
 
@@ -131,13 +131,13 @@ export class AnyCSS {
     if (typeof classNames === 'string' && this.aliases[classNames]) {
       return this.main
         .process(this.aliases[classNames])
-        .map(item => this.generate(item, true))
+        .map((item) => this.generate(item, true))
         .join('\n')
     }
 
     return this.main
       .process(classNames)
-      .map(item => this.generate(item, true))
+      .map((item) => this.generate(item, true))
       .join('\n')
   }
 
@@ -179,14 +179,14 @@ export class AnyCSS {
   public removeLayer(layerName: string): this {
     if (layerName !== 'base' && layerName !== 'theme') {
       this.layers.delete(layerName)
-      this.layerOrder = this.layerOrder.filter(layer => layer !== layerName)
+      this.layerOrder = this.layerOrder.filter((layer) => layer !== layerName)
     }
     return this
   }
 
   public setLayerOrder(order: string[]): this {
     const existingLayers = Array.from(this.layers.keys())
-    const missingLayers = existingLayers.filter(layer => !order.includes(layer))
+    const missingLayers = existingLayers.filter((layer) => !order.includes(layer))
     this.layerOrder = [...order, ...missingLayers]
     return this
   }
@@ -399,11 +399,11 @@ export class AnyCSS {
     }
 
     const existingLayers = Array.from(this.layers.keys())
-    const orderedLayers = this.layerOrder.filter(layer => existingLayers.includes(layer))
+    const orderedLayers = this.layerOrder.filter((layer) => existingLayers.includes(layer))
 
     let styles = this.useLayer ? `@layer ${orderedLayers.join(', ')};\n` : ''
 
-    orderedLayers.forEach(layer => {
+    orderedLayers.forEach((layer) => {
       if (
         (this as any)[`${layer}Config`] &&
         Object.entries((this as any)[`${layer}Config`]).length > 0
@@ -435,7 +435,7 @@ export class AnyCSS {
     let utilityStyles = ''
     let aliasStyles = ''
 
-    classes.forEach(className => {
+    classes.forEach((className) => {
       if (this.aliases[className]) {
         aliasStyles += `.${className} {\n${this.addTabs(
           this.generateRulesFromClass(this.aliases[className])
@@ -443,7 +443,7 @@ export class AnyCSS {
       } else {
         const processedStyles = this.main
           .process(className)
-          .map(item => this.generate(item))
+          .map((item) => this.generate(item))
           .join('\n')
 
         if (processedStyles) {
@@ -456,12 +456,12 @@ export class AnyCSS {
   }
 }
 
-export { is, merge, transformClasses } from '@nousantx/someutils'
+export { is, merge, transformClasses as createUtilityClass } from '@nousantx/someutils'
 export { TenoxUI } from '@tenoxui/moxie'
 export * from './types'
 export { resetter as preflight } from './style/preflight'
 export { properties } from './lib/property'
 export { values } from './lib/value'
 export { classes } from './lib/classes'
-export { defaultColors as colors } from './lib/color'
+export { defaultColors as colors, colorLib } from './lib/color'
 export default AnyCSS
