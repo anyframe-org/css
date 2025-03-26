@@ -5,10 +5,10 @@ import { is } from '@nousantx/someutils'
 
 const sizingPropertyMap: Record<string, GetCSSProperty> = {
   size: ['width', 'height'],
-  'w-min': 'minWidth',
-  'w-max': 'maxWidth',
-  'h-min': 'minHeight',
-  'h-max': 'maxHeight',
+  'min-w': 'minWidth',
+  'max-w': 'maxWidth',
+  'min-h': 'minHeight',
+  'max-h': 'maxHeight',
   top: 'top',
   right: 'right',
   bottom: 'bottom',
