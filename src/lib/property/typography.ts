@@ -43,7 +43,8 @@ export const typographyProperty = (sizing: number): Property => ({
         if (
           key === 'color' ||
           is.color.test(value) ||
-          ['inherit', 'current', 'black', 'white', 'transparent'].includes(value)
+          (['inherit', 'current', 'black', 'white', 'transparent'].includes(value) &&
+            key !== 'size')
         ) {
           return `value:color: ${createColor(value, secondValue, secondUnit)}` as GetCSSProperty
         } else if (
