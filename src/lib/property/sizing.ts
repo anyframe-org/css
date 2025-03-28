@@ -4,11 +4,13 @@ import type { ValuePropType, PropertyValue, Property } from '@tenoxui/moxie'
 import { is } from '@nousantx/someutils'
 
 const sizingPropertyMap: Record<string, GetCSSProperty> = {
-  size: ['width', 'height'],
+  w: 'width',
+  h: 'height',
   'min-w': 'minWidth',
   'max-w': 'maxWidth',
   'min-h': 'minHeight',
   'max-h': 'maxHeight',
+  size: ['width', 'height'],
   top: 'top',
   right: 'right',
   bottom: 'bottom',
@@ -51,24 +53,6 @@ export const sizingProperty = (sizing: number): Property => {
   Object.entries(sizingPropertyMap).forEach(([key, prop]) => {
     properties[key] = create(prop)
   })
-
-  properties.w = {
-    value,
-    group: 'container-size',
-    property: ({ key = '' }) => {
-      const keys: Keys = { min: 'minWidth', max: 'maxWidth' }
-      return keys[key as string] || 'width'
-    }
-  } as PropertyValue
-
-  properties.h = {
-    value,
-    group: 'container-size',
-    property: ({ key = '' }) => {
-      const keys: Keys = { min: 'minHeight', max: 'maxHeight' }
-      return keys[key as string] || 'height'
-    }
-  } as PropertyValue
 
   return properties
 }
