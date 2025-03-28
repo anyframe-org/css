@@ -25,7 +25,9 @@ export const backgroundProperty: Property = {
         origin: 'backgroundOrigin'
       }
 
-      if (
+      if (key && keys[key]) {
+        return keys[key]
+      } else if (
         is.color.test(value) ||
         ['inherit', 'current', 'black', 'white', 'transparent'].includes(value)
       ) {
@@ -40,7 +42,7 @@ export const backgroundProperty: Property = {
         return keys.position
       }
 
-      return key ? keys[key] : 'background'
+      return 'background'
     },
     value: ({ key, value = '', unit = '', secondValue = '', secondUnit = '' }) => {
       if (value) {
