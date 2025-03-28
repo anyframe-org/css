@@ -395,7 +395,8 @@ export class AnyCSS {
 
   public createStyles(finalUtilities: string = ''): string {
     if (this.useResetter) {
-      this.addStyle('preflight', { ...variables, ...resetter })
+      const styles = this.processApplyObject({ ...variables, ...resetter })
+      this.layers.set('preflight', styles)
     }
 
     const existingLayers = Array.from(this.layers.keys())
@@ -464,4 +465,5 @@ export { properties } from './lib/property'
 export { values } from './lib/value'
 export { classes } from './lib/classes'
 export { defaultColors as colors, colorLib } from './lib/color'
+export { createColor as createColorValue } from '@/utils/createColorValue'
 export default AnyCSS
