@@ -41,8 +41,6 @@ export const resetter: ApplyStyleObject = {
   ':where(select:is([multiple], [size])) optgroup': '[fontWeight]-bolder',
   ':where(select:is([multiple], [size])) optgroup option': '[paddingInlineStart]-20px',
   '::file-selector-button': '[marginInlineEnd]-4px',
-  '::placeholder':
-    'opacity-1 [@supports_(not_(-webkit-appearance:_-apple-pay-button))_or_(contain-intrinsic-size:1px)]:[color]-[color-mix(in_oklab,_currentColor_50%,_transparent)]',
   textarea: 'resize-vertical',
   '::-webkit-search-decoration': '[webkitAppearance]-none',
   '::-webkit-date-and-time-value': 'min-h-1lh [textAlign]-inherit',
