@@ -1,4 +1,3 @@
-import type { Keys } from '@/types'
 import type { GetCSSProperty } from '@tenoxui/types'
 import type { ValuePropType, PropertyValue, Property } from '@tenoxui/moxie'
 import { is } from '@nousantx/someutils'
