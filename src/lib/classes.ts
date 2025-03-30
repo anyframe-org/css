@@ -2,6 +2,10 @@ import type { Classes } from '@tenoxui/types'
 import { merge, transformClasses } from '@nousantx/someutils'
 
 const classBasedStyle: Classes = {
+  boxSizing: {
+    'box-border': 'border-box',
+    'box-content': 'content-box'
+  },
   fontStyle: {
     italic: 'italic',
     'not-italic': 'normal'
@@ -135,6 +139,10 @@ const classBasedStyle: Classes = {
     'place-self-center': 'center',
     'place-self-stretch': 'stretch',
     'place-self-auto': 'auto'
+  },
+  listStylePosition: {
+    'list-inside': 'inside',
+    'list-outside': 'outside'
   }
 }
 
