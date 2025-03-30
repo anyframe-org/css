@@ -21,7 +21,7 @@ export class AnyCSS {
   private property: Property
   private values: Values
   private classes: Classes
-  private aliases: Aliases
+  private alias: Aliases
   private breakpoints: Breakpoints
   private useResetter: boolean
   private useLayer: boolean
@@ -47,7 +47,7 @@ export class AnyCSS {
     property = {},
     values = {},
     classes = {},
-    aliases = {},
+    alias = {},
     breakpoints = {},
     apply = {},
     theme = {},
@@ -84,7 +84,7 @@ export class AnyCSS {
 
     this.property = { ...(defaultProperties({ sizing }) as Property), ...property }
     this.classes = merge(defaultClasses, classes)
-    this.aliases = { ...defaultAlias, ...aliases }
+    this.alias = { ...defaultAlias, ...alias }
     this.values = merge(
       colorLib({
         output: colorVariant,
@@ -128,9 +128,9 @@ export class AnyCSS {
   }
 
   public generateRulesFromClass(classNames: string | string[]) {
-    if (typeof classNames === 'string' && this.aliases[classNames]) {
+    if (typeof classNames === 'string' && this.alias[classNames]) {
       return this.main
-        .process(this.aliases[classNames])
+        .process(this.alias[classNames])
         .map((item) => this.generate(item, true))
         .join('\n')
     }
@@ -154,11 +154,11 @@ export class AnyCSS {
   }
 
   public getAliases(): Aliases {
-    return this.aliases
+    return this.alias
   }
 
   public addAliases(newAliases: Aliases): this {
-    this.aliases = { ...this.aliases, ...newAliases }
+    this.alias = { ...this.alias, ...newAliases }
     return this
   }
 
@@ -437,9 +437,9 @@ export class AnyCSS {
     let aliasStyles = ''
 
     classes.forEach((className) => {
-      if (this.aliases[className]) {
+      if (this.alias[className]) {
         aliasStyles += `.${className} {\n${this.addTabs(
-          this.generateRulesFromClass(this.aliases[className])
+          this.generateRulesFromClass(this.alias[className])
         )}\n}\n`
       } else {
         const processedStyles = this.main

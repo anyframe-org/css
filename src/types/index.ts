@@ -22,7 +22,6 @@ export interface TenoxUIConfig {
   property?: Property
   values?: Values
   classes?: Classes
-  aliases?: Aliases
 }
 
 export interface Config extends TenoxUIConfig {
@@ -36,6 +35,7 @@ export interface Config extends TenoxUIConfig {
   variants: Variants
   customVariants: Property
   breakpoints: Breakpoints
+  alias: Aliases
   apply: ApplyStyleObject
   base: ApplyStyleObject
   theme: ApplyStyleObject
