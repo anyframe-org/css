@@ -1,7 +1,7 @@
 import type { Property } from '@tenoxui/moxie'
 import { is } from '@nousantx/someutils'
 
-export const filterProperty: Property = {
+export const filterProperty = (sizing: number): Property => ({
   blur: {
     property: 'filter',
     group: 'anc-blur-value',
@@ -12,10 +12,10 @@ export const filterProperty: Property = {
         is.length.test(value)
           ? value
           : is.length.test(inputValue)
-            ? inputValue
-            : is.number.test(inputValue)
-              ? `${0.25 * Number(value)}rem`
-              : inputValue
+          ? inputValue
+          : is.number.test(inputValue)
+          ? `${sizing * Number(value)}rem`
+          : inputValue
       })`
     }
   },
@@ -44,10 +44,10 @@ export const filterProperty: Property = {
         is.length.test(value)
           ? value
           : is.length.test(inputValue)
-            ? inputValue
-            : is.number.test(inputValue)
-              ? `${0.25 * Number(value)}rem`
-              : inputValue
+          ? inputValue
+          : is.number.test(inputValue)
+          ? `${sizing * Number(value)}rem`
+          : inputValue
       })`
     }
   },
@@ -64,4 +64,4 @@ export const filterProperty: Property = {
     else finalValue = value + 'deg'
     return `value:backdrop-filter: hue-rotate(${finalValue})`
   }
-}
+})
