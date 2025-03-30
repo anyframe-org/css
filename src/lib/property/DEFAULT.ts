@@ -51,5 +51,8 @@ export const defaultProperty: Property = {
 
   overflow: 'overflow',
   'overflow-x': 'overflowX',
-  'overflow-y': 'overflowY'
+  'overflow-y': 'overflowY',
+
+  'list-image': 'listStyleImage',
+  list: 'listStyleType'
 }
