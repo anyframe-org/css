@@ -26,7 +26,7 @@ export const transformProperty = (sizing: number): Property => ({
         return sizing * Number(value) + 'rem'
       }
 
-      return `${value + unit} var(--tui-move-y)`
+      return `${value + unit} var(--anc-move-y)`
     }
   },
   'move-y': {
@@ -36,7 +36,7 @@ export const transformProperty = (sizing: number): Property => ({
         return sizing * Number(value) + 'rem'
       }
 
-      return `var(--tui-move-y) ${value + unit}`
+      return `var(--anc-move-y) ${value + unit}`
     }
   }
 })

@@ -9,32 +9,32 @@ export const shadowProperty: Property = {
       const shadowType = key === 'inset' ? 'inset-shadow' : 'shadow'
 
       const values: Record<string, string> = {
-        '2xs': `0 1px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.05))`,
-        xs: `0 1px 2px 0 var(--tui-${shadowType}-color, rgb(0 0 0 / 0.05))`,
-        sm: `0 1px 3px 0 var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1))`,
-        md: `0 4px 6px -1px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1))`,
-        lg: `0 10px 15px -3px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1))`,
-        xl: `0 20px 25px -5px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.1))`,
-        '2xl': `0 25px 50px -12px var(--tui-${shadowType}-color, rgb(0 0 0 / 0.25))`,
+        '2xs': `0 1px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.05))`,
+        xs: `0 1px 2px 0 var(--anc-${shadowType}-color, rgb(0 0 0 / 0.05))`,
+        sm: `0 1px 3px 0 var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1))`,
+        md: `0 4px 6px -1px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1))`,
+        lg: `0 10px 15px -3px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1))`,
+        xl: `0 20px 25px -5px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.1))`,
+        '2xl': `0 25px 50px -12px var(--anc-${shadowType}-color, rgb(0 0 0 / 0.25))`,
         none: '0 0 #0000'
       }
       const insetValues: Record<string, string> = {
-        '2xs': 'inset 0 1px var(--tui-inset-shadow-color, rgb(0 0 0 / 0.05)',
-        xs: 'inset 0 1px 1px var(--tui-inset-shadow-color, rgb(0 0 0 / 0.05))',
-        sm: 'inset 0 2px 4px var(--tui-inset-shadow-color, rgb(0 0 0 / 0.05))',
+        '2xs': 'inset 0 1px var(--anc-inset-shadow-color, rgb(0 0 0 / 0.05)',
+        xs: 'inset 0 1px 1px var(--anc-inset-shadow-color, rgb(0 0 0 / 0.05))',
+        sm: 'inset 0 2px 4px var(--anc-inset-shadow-color, rgb(0 0 0 / 0.05))',
         none: '0 0 #0000'
       }
 
       if (is.color.test(value))
-        return `--tui-${shadowType}-color: ${createColor(
+        return `--anc-${shadowType}-color: ${createColor(
           value,
           secondValue,
           secondUnit
         )}` as GetCSSProperty
       else
-        return `--tui-${shadowType}: ${
+        return `--anc-${shadowType}: ${
           (key === 'inset' ? insetValues[value] : values[value]) || value
-        }; box-shadow: var(--tui-inset-shadow), var(--tui-inset-ring-shadow), var(--tui-ring-offset-shadow), var(--tui-shadow), var(--tui-ring-shadow)` as GetCSSProperty
+        }; box-shadow: var(--anc-inset-shadow), var(--anc-inset-ring-shadow), var(--anc-ring-offset-shadow), var(--anc-shadow), var(--anc-ring-shadow)` as GetCSSProperty
     },
     value: null
   },
@@ -50,13 +50,13 @@ export const shadowProperty: Property = {
       else finalValue = value + unit
 
       if (is.color.test(value) || value === 'current')
-        return `--tui-${shadowType}-color: ${
+        return `--anc-${shadowType}-color: ${
           value === 'current' ? 'currentColor' : finalValue
         }` as GetCSSProperty
       else
-        return `--tui-${shadowType}: ${
+        return `--anc-${shadowType}: ${
           key === 'inset' ? 'inset' : ''
-        } 0 0 0 calc(${finalValue} + var(--tui-ring-offset-width, 2px)) var(--tui-ring-shadow-color, currentColor); box-shadow: var(--tui-inset-shadow), var(--tui-inset-ring-shadow), var(--tui-ring-offset-shadow), var(--tui-shadow), var(--tui-ring-shadow)` as GetCSSProperty
+        } 0 0 0 calc(${finalValue} + var(--anc-ring-offset-width, 2px)) var(--anc-ring-shadow-color, currentColor); box-shadow: var(--anc-inset-shadow), var(--anc-inset-ring-shadow), var(--anc-ring-offset-shadow), var(--anc-shadow), var(--anc-ring-shadow)` as GetCSSProperty
     },
     value: null
   },
@@ -71,11 +71,11 @@ export const shadowProperty: Property = {
       else finalValue = value + unit
 
       if (is.color.test(value) || value === 'current')
-        return `--tui-ring-offset-color: ${
+        return `--anc-ring-offset-color: ${
           value === 'current' ? 'currentColor' : finalValue
         }` as GetCSSProperty
       else
-        return `--tui-ring-offset-width: ${finalValue}; --tui-ring-offset-shadow: 0 0 0 var(--tui-ring-offset-width) var(--tui-ring-offset-color);` as GetCSSProperty
+        return `--anc-ring-offset-width: ${finalValue}; --anc-ring-offset-shadow: 0 0 0 var(--anc-ring-offset-width) var(--anc-ring-offset-color);` as GetCSSProperty
     },
     value: null
   }

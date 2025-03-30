@@ -2,13 +2,13 @@ import type { ApplyStyleObject } from '@types'
 
 export const variables: ApplyStyleObject = {
   ':root': `
-    [--tui-inset-shadow]-[0_0_#0000]
-    [--tui-inset-ring-shadow]-[0_0_#0000]
-    [--tui-shadow]-[0_0_#0000]
-    [--tui-ring-shadow]-[0_0_#0000]
-    [--tui-ring-offset-shadow]-[0_0_#0000]
-    [--tui-ring-offset-width]-0px
-    [--tui-ring-inset]-[_]
-    [--tui-ring-offset-color]-#fff
+    [--anc-inset-shadow]-[0_0_#0000]
+    [--anc-inset-ring-shadow]-[0_0_#0000]
+    [--anc-shadow]-[0_0_#0000]
+    [--anc-ring-shadow]-[0_0_#0000]
+    [--anc-ring-offset-shadow]-[0_0_#0000]
+    [--anc-ring-offset-width]-0px
+    [--anc-ring-inset]-[_]
+    [--anc-ring-offset-color]-#fff
   `
 }
