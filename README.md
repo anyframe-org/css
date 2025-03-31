@@ -24,11 +24,13 @@ const { AnyCSS } = __anyframe_css__
 ## Usage Example
 
 ```javascript
+import { AnyCSS } from '@anyframe/css'
+
 const css = AnyCSS({
   /* configuration here */
 })
 
-console.log(ui.render(['bg-red-500', 'flex']))
+console.log(css.render(['bg-red-500', 'flex']))
 ```
 
 ## License
