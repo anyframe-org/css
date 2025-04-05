@@ -133,7 +133,7 @@ export class AnyCSS {
       return this.main
         .process(this.alias[classNames])
         .map((item) => {
-          const { className, cssRules, value, prefix: itemPrefix } = item
+          const { prefix: itemPrefix } = item
 
           if (prefix && prefix === itemPrefix) return
 
@@ -477,34 +477,37 @@ export class AnyCSS {
 
     const classes = Array.isArray(classNames) ? classNames : classNames.split(/\s+/).filter(Boolean)
 
-    const storedRules = []
+    const storedRules: string[] = []
 
     classes.forEach((className) => {
       const parsed = this.main.parse(className, Object.keys(this.alias))
 
-      const [prefix, type] = parsed
-      if (this.alias[type]) {
-        const rules = this.generateRulesFromClass(type, prefix)
-        let finalRules
-        if (prefix) {
-          const processedPrefix = this.generatePrefix(prefix)
-          finalRules = `${processedPrefix.prefix} {\n${this.addTabs(rules, this.tabSize)}\n}`
-        } else finalRules = rules
+      if (parsed) {
+        const [prefix, type] = parsed
 
-        storedRules.push(
-          `.${this.main.escapeCSSSelector(className)} {
-${this.addTabs(finalRules)}
-}\n`
-        )
-      } else {
-        const processedStyles = this.main
-          .process(className)
-          .map((item) => this.generate(item))
-          .join('\n')
+        if (type && this.alias[type]) {
+          const rules = this.generateRulesFromClass(type, prefix)
+          let finalRules: string
 
-        if (processedStyles) {
-          storedRules.push(processedStyles + '\n')
+          if (prefix) {
+            const processedPrefix = this.generatePrefix(prefix)
+            finalRules = `${processedPrefix.prefix} {\n${this.addTabs(rules, this.tabSize)}\n}`
+          } else finalRules = rules
+
+          storedRules.push(
+            `.${this.main.escapeCSSSelector(className)} {\n${this.addTabs(finalRules)}\n}`
+          )
+          return
         }
+      }
+
+      const processedStyles = this.main
+        .process(className)
+        .map((item) => this.generate(item))
+        .join('\n')
+
+      if (processedStyles) {
+        storedRules.push(processedStyles + '\n')
       }
     })
 

@@ -1,5 +1,5 @@
 import type { GetCSSProperty } from '@tenoxui/types'
-import type { Property } from '@tenoxui/moxie'
+import type { Property, PropertyValue, PropertyParams } from '@tenoxui/moxie'
 import { is } from '@nousantx/someutils'
 import { createColor } from '@/utils/createColorValue'
 
@@ -7,7 +7,7 @@ export const borderProperty = (sizing: number): Property => {
   const createWidthValue = (value: string, unit?: string) =>
     !value ? '1px' : is.number.test(value + unit) ? value + 'px' : value + unit
 
-  const radiusValue = ({ value, unit }) => {
+  const radiusValue = ({ value = '', unit = '' }) => {
     if (!value) return '1px'
     if (is.length.test(value)) return value
     if (is.number.test(value + unit)) return sizing * Number(value) + 'rem'
@@ -15,28 +15,32 @@ export const borderProperty = (sizing: number): Property => {
   }
 
   const createBorderPropertyFunction = (baseName: string) => {
-    return ({ value = '', unit = '', key = '', secondValue = '', secondUnit = '' }) => {
+    return ({
+      value = '',
+      unit = '',
+      key = '',
+      secondValue = '',
+      secondUnit = ''
+    }: PropertyParams) => {
       if (
         key === 'color' ||
-        is.color.test(value) ||
-        ['inherit', 'current', 'black', 'white', 'transparent'].includes(value)
+        is.color.test(value || '') ||
+        ['inherit', 'current', 'black', 'white', 'transparent'].includes(value || '')
       ) {
         return `value:${baseName}-color: ${createColor(
-          value,
+          value || '',
           secondValue,
           secondUnit
         )}` as GetCSSProperty
       }
-
       if (
         key === 'style' ||
-        ['solid', 'dashed', 'double', 'hidden', 'none', 'dotted'].includes(value)
+        ['solid', 'dashed', 'double', 'hidden', 'none', 'dotted'].includes(value || '')
       ) {
         return `value:${baseName}-style: ${value}` as GetCSSProperty
       }
-
       const suffix = baseName === 'border' ? (key ? `-${key}-width` : '-width') : '-width'
-      return `value:${baseName}${suffix}: ${createWidthValue(value, unit)}` as GetCSSProperty
+      return `value:${baseName}${suffix}: ${createWidthValue(value || '', unit)}` as GetCSSProperty
     }
   }
 
@@ -58,23 +62,26 @@ export const borderProperty = (sizing: number): Property => {
     'radius-br': createRadiusUtility('borderBottomRightRadius')
   }
 
-  const borderDirections: Record<string, GetCSSProperty> = {
+  const borderDirections: Record<string, string> = {
     border: 'border',
-    'border-x': 'borderInline',
-    'border-y': 'borderBlock',
-    'border-t': 'borderTop',
-    'border-r': 'borderRight',
-    'border-b': 'borderBottom',
-    'border-l': 'borderLeft'
+    'border-x': 'border-inline',
+    'border-y': 'border-block',
+    'border-t': 'border-top',
+    'border-r': 'border-right',
+    'border-b': 'border-bottom',
+    'border-l': 'border-left'
   }
 
-  const borderProperties = Object.entries(borderDirections).reduce((acc, [key, baseName]) => {
-    acc[key] = {
-      property: createBorderPropertyFunction(baseName),
-      value: key === 'border' ? undefined : null
-    }
-    return acc
-  }, {})
+  const borderProperties = Object.entries(borderDirections).reduce<Record<string, PropertyValue>>(
+    (acc, [key, baseName]) => {
+      acc[key] = {
+        property: createBorderPropertyFunction(baseName),
+        value: key === 'border' ? undefined : null
+      }
+      return acc
+    },
+    {}
+  )
 
   return {
     ...borderProperties,
@@ -83,5 +90,5 @@ export const borderProperty = (sizing: number): Property => {
       property: createBorderPropertyFunction('outline'),
       value: null
     }
-  }
+  } as Property
 }

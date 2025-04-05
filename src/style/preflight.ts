@@ -36,7 +36,7 @@ export const resetter: ApplyStyleObject = {
   'img, svg, video, canvas, audio, iframe, embed, object': 'block align-middle',
   'img, video': 'max-w-100% h-auto',
   'button, input, select, optgroup, textarea, ::file-selector-button':
-    '[font,color,letterSpacing,fontFeatureSettings,fontVariationSettings]-inherit bg-transparent radius-0 opacity-1',
+    '[font,color,letterSpacing,fontFeatureSettings,fontVariationSettings]-inherit bg-transparent radius-[0] opacity-1',
 
   ':where(select:is([multiple], [size])) optgroup': '[fontWeight]-bolder',
   ':where(select:is([multiple], [size])) optgroup option': '[paddingInlineStart]-20px',
