@@ -2,7 +2,7 @@ import type { ProcessedStyle, Property } from '@tenoxui/moxie'
 import type { Values, Classes, Aliases } from '@tenoxui/types'
 import type { Variants, Breakpoints, TenoxUIConfig, Config, ApplyStyleObject } from './types'
 import Moxie from '@tenoxui/moxie'
-import { merge } from '@nousantx/someutils'
+import { merge, transformClasses } from '@nousantx/someutils'
 
 import { defaultVariants, defaultCustomVariants } from './lib/variant'
 import { properties as defaultProperties } from './lib/property'
@@ -44,9 +44,10 @@ export class AnyCSS {
     layerOrder = ['theme', 'base', 'components', 'utilities'],
     variants = {},
     customVariants = {},
-    property = {},
-    values = {},
-    classes = {},
+    shorthand = {},
+    valueAlias = {},
+    utilityClass = {},
+    utilityStyle = {},
     alias = {},
     breakpoints = {},
     apply = {},
@@ -82,8 +83,8 @@ export class AnyCSS {
       ['utilities', '']
     ])
 
-    this.property = { ...(defaultProperties({ sizing }) as Property), ...property }
-    this.classes = merge(defaultClasses, classes)
+    this.property = { ...(defaultProperties({ sizing }) as Property), ...shorthand }
+    this.classes = merge(defaultClasses, transformClasses(utilityStyle), utilityClass)
     this.alias = { ...defaultAlias, ...alias }
     this.values = merge(
       colorLib({
@@ -91,7 +92,7 @@ export class AnyCSS {
         colors
       }),
       defaultValues,
-      values
+      valueAlias
     )
 
     this.tuiConfig = {
@@ -433,14 +434,15 @@ export class AnyCSS {
 
     const classes = Array.isArray(classNames) ? classNames : classNames.split(/\s+/).filter(Boolean)
 
-    let utilityStyles = ''
-    let aliasStyles = ''
+    const finalRules = []
 
     classes.forEach((className) => {
       if (this.alias[className]) {
-        aliasStyles += `.${className} {\n${this.addTabs(
-          this.generateRulesFromClass(this.alias[className])
-        )}\n}\n`
+        finalRules.push(
+          `.${className} {\n${this.addTabs(
+            this.generateRulesFromClass(this.alias[className])
+          )}\n}\n`
+        )
       } else {
         const processedStyles = this.main
           .process(className)
@@ -448,12 +450,12 @@ export class AnyCSS {
           .join('\n')
 
         if (processedStyles) {
-          utilityStyles += processedStyles + '\n'
+          finalRules.push(processedStyles + '\n')
         }
       }
     })
 
-    return this.createStyles(aliasStyles + utilityStyles)
+    return this.createStyles(finalRules.join(''))
   }
 }
 
