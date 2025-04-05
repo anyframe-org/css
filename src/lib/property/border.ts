@@ -22,6 +22,8 @@ export const borderProperty = (sizing: number): Property => {
       secondValue = '',
       secondUnit = ''
     }: PropertyParams) => {
+      const borderStyleValue: string[] = ['solid', 'dashed', 'double', 'hidden', 'none', 'dotted']
+
       if (
         key === 'color' ||
         is.color.test(value || '') ||
@@ -33,14 +35,13 @@ export const borderProperty = (sizing: number): Property => {
           secondUnit
         )}` as GetCSSProperty
       }
-      if (
-        key === 'style' ||
-        ['solid', 'dashed', 'double', 'hidden', 'none', 'dotted'].includes(value || '')
-      ) {
-        return `value:${baseName}-style: ${value}` as GetCSSProperty
+      if (key === 'style' || borderStyleValue.includes(value || '')) {
+        return `value:${baseName}-style: ${value}${secondValue}` as GetCSSProperty
       }
       const suffix = baseName === 'border' ? (key ? `-${key}-width` : '-width') : '-width'
-      return `value:${baseName}${suffix}: ${createWidthValue(value || '', unit)}` as GetCSSProperty
+      return `value:${baseName}${suffix}: ${createWidthValue(value || '', unit)}${
+        borderStyleValue.includes(secondValue) ? '; border-style: ' + secondValue : ''
+      }` as GetCSSProperty
     }
   }
 
@@ -89,6 +90,57 @@ export const borderProperty = (sizing: number): Property => {
     outline: {
       property: createBorderPropertyFunction('outline'),
       value: null
+    },
+    'divide-x': ({ value = '', unit = '' }) => {
+      const template = 'value:& > :not(:last-child) {'
+
+      let finalValue
+
+      if (!value) finalValue = '1px'
+      else if (is.number.test(value + unit)) finalValue = Number(value) + 'px'
+      else if (is.length.test(value)) finalValue = value
+      else finalValue = value + unit
+
+      return (template +
+        `
+  border-inline-start-width: 0px;
+  border-inline-end-width: ${finalValue};
+}`) as GetCSSProperty
+    },
+
+    'divide-y': ({ value = '', unit = '' }) => {
+      const template = 'value:& > :not(:last-child) {'
+
+      let finalValue
+
+      if (!value) finalValue = '1px'
+      else if (is.number.test(value + unit)) finalValue = Number(value) + 'px'
+      else if (is.length.test(value)) finalValue = value
+      else finalValue = value + unit
+
+      return (template +
+        `
+  border-block-start-width: 0px;
+  border-block-end-width: ${finalValue};
+}`) as GetCSSProperty
+    },
+
+    divide: ({ key = '', value = '', secondValue = '' }) => {
+      const template = 'value:& > :not(:last-child) { border-'
+
+      let finalValue
+
+      if (
+        key === 'color' ||
+        is.color.test(value || '') ||
+        ['inherit', 'current', 'black', 'white', 'transparent'].includes(value || '')
+      ) {
+        finalValue = createColor(value, secondValue)
+      } else finalValue = value
+
+      if (key === 'color') {
+        return template + 'color: ' + finalValue + ' }'
+      } else return template + 'style: ' + finalValue + ' }'
     }
   } as Property
 }
