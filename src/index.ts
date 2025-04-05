@@ -495,7 +495,7 @@ export class AnyCSS {
           } else finalRules = rules
 
           storedRules.push(
-            `.${this.main.escapeCSSSelector(className)} {\n${this.addTabs(finalRules)}\n}`
+            `.${this.main.escapeCSSSelector(className)} {\n${this.addTabs(finalRules)}\n}\n`
           )
           return
         }
