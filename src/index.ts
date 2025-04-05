@@ -128,11 +128,17 @@ export class AnyCSS {
     return new this.engine(merge(this.tuiConfig, inputConfig))
   }
 
-  public generateRulesFromClass(classNames: string | string[]) {
+  public generateRulesFromClass(classNames: string | string[], prefix?: string) {
     if (typeof classNames === 'string' && this.alias[classNames]) {
       return this.main
         .process(this.alias[classNames])
-        .map((item) => this.generate(item, true))
+        .map((item) => {
+          const { className, cssRules, value, prefix: itemPrefix } = item
+
+          if (prefix && prefix === itemPrefix) return
+
+          return this.generate(item, true)
+        })
         .join('\n')
     }
 
@@ -296,18 +302,36 @@ export class AnyCSS {
     finalValue: string,
     indent: number = 0
   ): string {
+    const prefixData = this.generatePrefix(prefix)
+
+    if (prefixData.isMedia || prefixData.isBreakpoint) {
+      return `${prefixData.prefix} {\n${this.formatMediaContent(
+        rules,
+        finalValue,
+        prefixData.isBreakpoint
+      )}\n}`
+    }
+
+    return `${prefixData.prefix} { ${rules}${finalValue} }`
+  }
+
+  private generatePrefix(prefix: string): {
+    prefix: string
+    isMedia: boolean
+    isBreakpoint: boolean
+  } {
+    // Handle custom prefixes
     if (this.isCustomPrefix(prefix)) {
       const moxieRule = this.processCustomPrefix(prefix)
       if (moxieRule && typeof moxieRule === 'string') {
         if (moxieRule.startsWith('value:')) {
           const actualRule = moxieRule.substring(6)
-
           if (actualRule.startsWith('@media')) {
-            return `${actualRule} {\n${rules}${finalValue}\n  }`
+            return { prefix: actualRule, isMedia: true, isBreakpoint: false }
           }
-          return `${actualRule} { ${rules}${finalValue} }`
+          return { prefix: actualRule, isMedia: false, isBreakpoint: false }
         }
-        return `${moxieRule} { ${rules}${finalValue} }`
+        return { prefix: moxieRule, isMedia: false, isBreakpoint: false }
       }
     }
 
@@ -316,23 +340,42 @@ export class AnyCSS {
       (prefix.startsWith('[') && prefix.endsWith(']')) ||
       (prefix.startsWith('(') && prefix.endsWith(')'))
     ) {
-      return `${this.prefixLoader.processValue(prefix, '', '')} { ${rules}${finalValue} }`
+      return {
+        prefix: this.prefixLoader.processValue(prefix, '', ''),
+        isMedia: false,
+        isBreakpoint: false
+      }
     }
 
     // Handle breakpoints
     const breakpointQuery = this.getBreakpointQuery(prefix)
     if (breakpointQuery) {
-      return `${breakpointQuery} {\n${this.addTabs(rules + finalValue, this.tabSize, true)}\n}`
+      return { prefix: breakpointQuery, isMedia: false, isBreakpoint: true }
     }
 
     // Handle variants
     if (this.variants[prefix]) {
-      return `${this.variants[prefix]} {\n${this.addTabs(rules + finalValue)}\n}`
+      return {
+        prefix: this.variants[prefix],
+        isMedia: false,
+        isBreakpoint: true
+      }
     }
 
     // Handle pseudo-elements/classes
     const pseudoSyntax = this.getPseudoSyntax(prefix)
-    return `&${pseudoSyntax}${prefix} { ${rules}${finalValue} }`
+    return {
+      prefix: `&${pseudoSyntax}${prefix}`,
+      isMedia: false,
+      isBreakpoint: false
+    }
+  }
+
+  private formatMediaContent(rules: string, finalValue: string, isBreakpoint: boolean): string {
+    if (isBreakpoint) {
+      return this.addTabs(rules + finalValue, this.tabSize, true)
+    }
+    return rules + finalValue
   }
 
   /**
@@ -434,14 +477,24 @@ export class AnyCSS {
 
     const classes = Array.isArray(classNames) ? classNames : classNames.split(/\s+/).filter(Boolean)
 
-    const finalRules = []
+    const storedRules = []
 
     classes.forEach((className) => {
-      if (this.alias[className]) {
-        finalRules.push(
-          `.${className} {\n${this.addTabs(
-            this.generateRulesFromClass(this.alias[className])
-          )}\n}\n`
+      const parsed = this.main.parse(className, Object.keys(this.alias))
+
+      const [prefix, type] = parsed
+      if (this.alias[type]) {
+        const rules = this.generateRulesFromClass(type, prefix)
+        let finalRules
+        if (prefix) {
+          const processedPrefix = this.generatePrefix(prefix)
+          finalRules = `${processedPrefix.prefix} {\n${this.addTabs(rules, this.tabSize)}\n}`
+        } else finalRules = rules
+
+        storedRules.push(
+          `.${this.main.escapeCSSSelector(className)} {
+${this.addTabs(finalRules)}
+}\n`
         )
       } else {
         const processedStyles = this.main
@@ -450,12 +503,12 @@ export class AnyCSS {
           .join('\n')
 
         if (processedStyles) {
-          finalRules.push(processedStyles + '\n')
+          storedRules.push(processedStyles + '\n')
         }
       }
     })
 
-    return this.createStyles(finalRules.join(''))
+    return this.createStyles(storedRules.join(''))
   }
 }
 
