@@ -1,5 +1,5 @@
 import type { Property, Config as MoxieOptions } from '@tenoxui/moxie'
-import type { Values, Classes, Aliases } from '@tenoxui/types'
+import type { Values, Classes, Aliases, CSSPropertyOrVariable } from '@tenoxui/types'
 import { TenoxUI as Moxie } from '@tenoxui/moxie'
 
 export type Variants = {
@@ -18,13 +18,23 @@ export type ApplyStyleObject = {
   [key in Exclude<string, 'SINGLE_RULE'>]?: string | ApplyStyleObject
 }
 
+type UtilityStyle = {
+  [className: string]: {
+    [property in CSSPropertyOrVariable]?: string
+  }
+}
+
 export interface TenoxUIConfig {
   property?: Property
   values?: Values
   classes?: Classes
 }
 
-export interface Config extends TenoxUIConfig {
+export interface Config {
+  shorthand: Property
+  valueAlias: Values
+  utilityClass: Classes
+  utilityStyle: UtilityStyle
   sizing: number
   colorVariant: ColorFormat
   colors: { [name: string]: string }
