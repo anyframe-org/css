@@ -1,7 +1,7 @@
 import type { Classes } from '@tenoxui/types'
-import { merge, transformClasses } from '@nousantx/someutils'
+import { merge, transformClasses, createSameValue } from '@nousantx/someutils'
 
-const classBasedStyle: Classes = {
+export const classBasedStyle: Classes = {
   boxSizing: {
     'box-border': 'border-box',
     'box-content': 'content-box'
@@ -31,41 +31,33 @@ const classBasedStyle: Classes = {
     'underline-offsite-auto': 'auto'
   },
   textTransform: {
-    uppercase: 'uppercase',
-    lowercase: 'lowercase',
-    capitalize: 'capitalize',
+    ...createSameValue(['uppercase', 'lowercase', 'capitalize']),
     'normal-case': 'none'
   },
   display: {
-    inline: 'inline',
-    block: 'block',
-    'inline-block': 'inline-block',
-    'flow-root': 'flow-root',
-    flex: 'flex',
-    'inline-flex': 'inline-flex',
-    grid: 'grid',
-    'inline-grid': 'inline-grid',
-    contents: 'contents',
-    table: 'table',
-    'inline-table': 'inline-table',
-    'table-caption': 'table-caption',
-    'table-cell': 'table-cell',
-    'table-column': 'table-column',
-    'table-column-group': 'table-column-group',
-    'table-footer-group': 'table-footer-group',
-    'table-header-group': 'table-header-group',
-    'table-row-group': 'table-row-group',
-    'table-row': 'table-row',
-    'list-item': 'list-item',
+    ...createSameValue([
+      'inline',
+      'block',
+      'inline-block',
+      'flow-root',
+      'flex',
+      'inline-flex',
+      'grid',
+      'inline-grid',
+      'contents',
+      'table',
+      'table-caption',
+      'table-cell',
+      'table-column',
+      'table-column-group',
+      'table-footer-group',
+      'table-row-group',
+      'table-row',
+      'list-item'
+    ]),
     hidden: 'none'
   },
-  position: {
-    static: 'static',
-    fixed: 'fixed',
-    absolute: 'absolute',
-    relative: 'relative',
-    sticky: 'sticky'
-  },
+  position: createSameValue(['static', 'fixed', 'absolute', 'relative', 'sticky']),
   justifyContent: {
     'justify-start': 'flex-start',
     'justify-end': 'flex-end',
