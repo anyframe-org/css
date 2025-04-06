@@ -515,13 +515,13 @@ export class AnyCSS {
   }
 }
 
-export { is, merge, transformClasses as createUtilityClass } from '@nousantx/someutils'
-export { TenoxUI } from '@tenoxui/moxie'
+export { is, merge, transformClasses as createUtilityStyle } from '@nousantx/someutils'
+export { TenoxUI as Moxie } from '@tenoxui/moxie'
 export * from './types'
 export { resetter as preflight } from './style/preflight'
-export { properties } from './lib/property'
-export { values } from './lib/value'
-export { classes } from './lib/classes'
+export { properties as shorthands } from './lib/property'
+export { values as valueAlias } from './lib/value'
+export { classes as utilityClass } from './lib/classes'
 export { defaultColors as colors, colorLib } from './lib/color'
 export { createColor as createColorValue } from '@/utils/createColorValue'
 export default AnyCSS
