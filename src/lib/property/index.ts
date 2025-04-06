@@ -8,6 +8,7 @@ import { shadowProperty } from './shadow'
 import { filterProperty } from './filter'
 import { transitionProperty } from './transition'
 import { transformProperty } from './transform'
+import { interactivityProperties } from './interactivity'
 
 export const properties = ({ sizing }: { sizing: number }): Property => {
   return {
@@ -19,6 +20,7 @@ export const properties = ({ sizing }: { sizing: number }): Property => {
     ...(shadowProperty as Property),
     ...(filterProperty(sizing) as Property),
     ...(transitionProperty as Property),
+    ...(interactivityProperties as Property),
     ...(transformProperty(sizing) as Property)
   }
 }
