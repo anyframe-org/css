@@ -1,7 +1,9 @@
 import type { Property } from '@tenoxui/moxie'
+import type { GetCSSProperty } from '@tenoxui/types'
 import { is } from '@nousantx/someutils'
 
 export const transformProperty = (sizing: number): Property => ({
+  origin: 'transformOrigin',
   move: {
     property: 'translate',
     value: ({ value = '', unit = '', secondValue = '', secondUnit = '' }) => {
@@ -19,24 +21,32 @@ export const transformProperty = (sizing: number): Property => ({
       return `${firstVal} ${secondVal}`
     }
   },
-  'move-x': {
-    property: 'translate',
-    value: ({ value = '', unit = '' }) => {
-      if (is.number.test(value + unit)) {
-        return sizing * Number(value) + 'rem'
-      }
+  'move-x': ({ value = '', unit = '' }) => {
+    let finalValue
+    if (is.number.test(value + unit)) {
+      finalValue = sizing * Number(value) + 'rem'
+    } else finalValue = value + unit
 
-      return `${value + unit} var(--anc-move-y)`
-    }
+    return `value:--anc-move-x: ${finalValue}; translate: var(--anc-move-x, 0) var(--anc-move-y, 0)` as GetCSSProperty
   },
-  'move-y': {
-    property: 'translate',
-    value: ({ value = '', unit = '' }) => {
-      if (is.number.test(value + unit)) {
-        return sizing * Number(value) + 'rem'
-      }
+  'move-y': ({ value = '', unit = '' }) => {
+    let finalValue
+    if (is.number.test(value + unit)) {
+      finalValue = sizing * Number(value) + 'rem'
+    } else finalValue = value + unit
 
-      return `var(--anc-move-y) ${value + unit}`
-    }
+    return `value:--anc-move-y: ${finalValue}; translate: var(--anc-move-x, 0) var(--anc-move-y, 0)` as GetCSSProperty
+  },
+  scale: ({ value = '', unit = '', secondValue = '', secondUnit = '' }) => {
+    const firstVal = value + unit
+    const secondVal = secondValue ? secondValue + secondUnit : firstVal
+
+    return `value:scale: ${firstVal} ${secondVal}` as GetCSSProperty
+  },
+  skew: ({ value = '', unit = '', secondValue = '', secondUnit = '' }) => {
+    const firstVal = value + (unit || 'deg')
+    const secondVal = secondValue ? secondValue + secondUnit : firstVal
+
+    return `value:transform: skewX(${firstVal}) skewY(${secondVal})` as GetCSSProperty
   }
 })
