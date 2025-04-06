@@ -1,11 +1,11 @@
 # AnyFrame/css
 
-`anyframe/css` is a **utility-first CSS framework** with rich features, fast, and easy to customize. We use `tenoxui` library for the style computation since this library is small and lightweight.
+`anyframe/css` is a **utility-first CSS framework** with rich features, fast, and easy to customize.
 
 ## Installation
 
 ```bash
-npm i @anyframe/css
+npm i @anyframe/css 
 ```
 
 ## Imports
