@@ -1,1 +1,1 @@
-test/*.test.js linguist-vendored
+tests/* linguist-vendored
