@@ -16,6 +16,10 @@ export const values: Values = {
   min: 'min-content',
   max: 'max-content',
   fit: 'fit-content',
+  'top-right': 'top right',
+  'top-left': 'top left',
+  'bottom-right': 'top right',
+  'bottom-left': 'top left',
   order: {
     first: 'calc(-infinity)',
     last: 'calc(infinity)',
