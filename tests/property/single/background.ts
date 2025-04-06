@@ -42,6 +42,6 @@ export const background = {
   backgroundPosition: {
     'bg-center': 'center',
     'bg-[top_left]': 'top left',
-    'bg-[position:top_left]': 'top left',
+    'bg-[position:top_left]': 'top left'
   }
 }

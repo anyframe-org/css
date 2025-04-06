@@ -9,7 +9,7 @@ export const classNames = merge(
     display,
     ...background,
     ...border,
-    ...typography,
+    ...typography
   },
   transformClasses({
     'text-xl/loose': {
@@ -19,6 +19,10 @@ export const classNames = merge(
     'text-xl': {
       fontSize: '1.25rem',
       lineHeight: 'calc(1.75 / 1.25)'
+    },
+    'border-2/dashed': {
+      borderWidth: '2px',
+      borderStyle: 'dashed'
     }
   })
 )
