@@ -40,7 +40,7 @@ export const borderProperty = (sizing: number): Property => {
       }
       const suffix = baseName === 'border' ? (key ? `-${key}-width` : '-width') : '-width'
       return `value:${baseName}${suffix}: ${createWidthValue(value || '', unit)}${
-        borderStyleValue.includes(secondValue) ? '; border-style: ' + secondValue : ''
+        borderStyleValue.includes(secondValue) ? `; ${baseName}-style: ` + secondValue : ''
       }` as GetCSSProperty
     }
   }
