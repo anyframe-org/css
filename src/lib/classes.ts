@@ -135,6 +135,26 @@ export const classBasedStyle: Classes = {
   listStylePosition: {
     'list-inside': 'inside',
     'list-outside': 'outside'
+  },
+  scrollSnapAlign: {
+    'snap-start': 'start',
+    'snap-end': 'end',
+    'snap-center': 'center',
+    'snap-align-none': 'none'
+  },
+  scrollSnapStop: {
+    'snap-normal': 'normal',
+    'snap-always': 'always'
+  },
+  scrollSnapType: {
+    'snap-none': 'none',
+    'snap-x': 'x var(--anc-scroll-snap-strictness)',
+    'snap-y': 'y var(--anc-scroll-snap-strictness)',
+    'snap-both': 'both var(--anc-scroll-snap-strictness)'
+  },
+  '--anc-scroll-snap-strictness': {
+    'snap-mandatory': 'mandatory',
+    'snap-proximity': 'proximity'
   }
 }
 
