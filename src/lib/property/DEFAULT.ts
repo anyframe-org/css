@@ -1,4 +1,5 @@
 import type { Property } from '@tenoxui/moxie'
+import type { CSSProperty } from '@tenoxui/types'
 
 export const defaultProperty: Property = {
   columns: 'columns',
@@ -54,5 +55,19 @@ export const defaultProperty: Property = {
   'overflow-y': 'overflowY',
 
   'list-image': 'listStyleImage',
-  list: 'listStyleType'
+  list: 'listStyleType',
+
+  rotate: {
+    property: 'rotate',
+    value: '{0}deg'
+  },
+
+  appearance: 'appearance',
+  cursor: 'cursor',
+  'field-sizing': 'fieldSizing' as CSSProperty,
+  'pointer-events': 'pointerEvents',
+  scroll: 'scrollBehavior',
+  touch: 'touchAction',
+  select: 'userSelect',
+  'will-change': 'willChange'
 }
