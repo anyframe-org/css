@@ -3,7 +3,6 @@ import type { Values, Classes, Aliases } from '@tenoxui/types'
 import type { Variants, Breakpoints, TenoxUIConfig, Config, ApplyStyleObject } from './types'
 import Moxie from '@tenoxui/moxie'
 import { merge, transformClasses } from '@nousantx/someutils'
-
 import { defaultVariants, defaultCustomVariants } from './lib/variant'
 import { properties as defaultProperties } from './lib/property'
 import { values as defaultValues } from './lib/value'
@@ -32,6 +31,7 @@ export class AnyCSS {
   private themeConfig: ApplyStyleObject
   private baseConfig: ApplyStyleObject
   private componentsConfig: ApplyStyleObject
+  private safelist: string[]
   private layers: Map<string, string>
 
   constructor({
@@ -54,6 +54,7 @@ export class AnyCSS {
     theme = {},
     base = {},
     components = {},
+    safelist = [],
     moxie = Moxie,
     moxieOptions = {}
   }: Partial<Config> = {}) {
@@ -72,6 +73,7 @@ export class AnyCSS {
       ...breakpoints
     }
     this.layerOrder = this.useResetter ? ['preflight', ...layerOrder] : layerOrder
+    this.safelist = safelist
     this.apply = apply
     this.themeConfig = theme
     this.baseConfig = base
@@ -473,9 +475,16 @@ export class AnyCSS {
   }
 
   public render(classNames?: string | string[]): string {
-    if (!classNames) return this.createStyles()
+    const classes = [
+      ...this.safelist,
+      ...(classNames
+        ? Array.isArray(classNames)
+          ? classNames
+          : classNames.split(/\s+/).filter(Boolean)
+        : [])
+    ]
 
-    const classes = Array.isArray(classNames) ? classNames : classNames.split(/\s+/).filter(Boolean)
+    if (!classes) return this.createStyles()
 
     const storedRules: string[] = []
 

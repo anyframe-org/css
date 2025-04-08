@@ -50,6 +50,7 @@ export interface Config {
   base: ApplyStyleObject
   theme: ApplyStyleObject
   components: ApplyStyleObject
+  safelist: string[]
   moxie: typeof Moxie
   moxieOptions: MoxieOptions
 }
