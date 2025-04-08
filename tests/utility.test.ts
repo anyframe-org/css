@@ -59,8 +59,8 @@ describe('AnyFrame CSS Unit Test', () => {
         }
       }
     })
-    expect(ui.isCustomPrefix('hx-[.trnox]')).toBe(true)
-    expect(ui.processCustomPrefix('hx-[.trnox]')).toBe('.trnox:hover &')
+    expect(ui.isCustomPrefix('hx-[.anc]')).toBe(true)
+    expect(ui.processCustomPrefix('hx-[.anc]')).toBe('.anc:hover &')
   })
   it('should format styles correctly', () => {
     expect(ui.formatRules(ui.formatRules('background: red'))).toBe('background: red')
@@ -82,5 +82,19 @@ describe('AnyFrame CSS Unit Test', () => {
       '.md\\:flex {\n  @media (width >= 48rem) {\n    display: flex\n  }\n}\n'
     )
     expect(ui.render('hover:bg-red')).toBe('.hover\\:bg-red {\n  &:hover { background: red }\n}\n')
+    expect(ui.render('hover:bg-red')).toBe('.hover\\:bg-red {\n  &:hover { background: red }\n}\n')
+
+    ui = new AnyCSS({
+      safelist: ['[background]-red']
+    })
+    expect(ui.render()).toBe(`.\\[background\\]-red {
+  background: red
+}\n`)
+    expect(ui.render('[background]-blue')).toBe(`.\\[background\\]-red {
+  background: red
+}
+.\\[background\\]-blue {
+  background: blue
+}\n`)
   })
 })

@@ -9,7 +9,7 @@ describe('Classes generation test', () => {
     }
   })
 
-  it('should render correct css properties from ', () => {
+  it('should render correct css properties from inputted data', () => {
     Object.entries(classNames).forEach(([property, classTests]) => {
       Object.entries(classTests).forEach(([className, expectedValue]) => {
         const rendered = ui.render(className)
