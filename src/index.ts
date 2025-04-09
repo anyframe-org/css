@@ -69,7 +69,7 @@ export class AnyCSS {
       md: '48rem',
       lg: '64rem',
       xl: '80rem',
-      '2xl': '96rem',
+      xxl: '96rem',
       ...breakpoints
     }
     this.layerOrder = this.useResetter ? ['preflight', ...layerOrder] : layerOrder
