@@ -8,7 +8,7 @@ import { properties as defaultProperties } from './lib/property'
 import { values as defaultValues } from './lib/value'
 import { classes as defaultClasses } from './lib/classes'
 import { alias as defaultAlias } from './lib/alias'
-import { colorLib } from './lib/color'
+import { defaultColors, colorLib } from './lib/color'
 import { resetter, variables } from './style'
 
 export class AnyCSS {
@@ -91,7 +91,7 @@ export class AnyCSS {
     this.values = merge(
       colorLib({
         output: colorVariant,
-        colors
+        colors: { ...defaultColors, ...colors }
       }),
       defaultValues,
       valueAlias
