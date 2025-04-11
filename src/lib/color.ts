@@ -31,7 +31,7 @@ export const colorLib = ({
   colors = {}
 }: {
   output: ColorFormat
-  colors: { [hex: string]: string }
+  colors: { [name: string]: string }
 }): any =>
   generateColors({
     color: colors,
