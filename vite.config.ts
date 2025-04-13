@@ -8,9 +8,8 @@ export default defineConfig({
       name: '__anyframe_css__',
       entry: './src/index.ts',
       formats: ['es', 'iife', 'cjs'],
-      fileName: (format) => `anycss.${format}.js`
+      fileName: (format) => `anycss.${format !== 'cjs' ? `${format}.js` : format}`
     },
-    sourcemap: true,
     rollupOptions: {
       output: {
         exports: 'named'

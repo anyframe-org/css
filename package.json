@@ -27,13 +27,13 @@
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
-  "main": "./dist/anycss.cjs.js",
+  "main": "./dist/anycss.cjs",
   "module": "./dist/anycss.es.js",
   "browser": "./dist/anycss.iife.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/anycss.cjs.js",
+      "require": "./dist/anycss.cjs",
       "import": "./dist/anycss.es.js"
     }
   },
