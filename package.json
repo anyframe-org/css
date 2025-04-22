@@ -1,6 +1,6 @@
 {
   "name": "@anyframe/css",
-  "version": "0.3.0-alpha.0",
+  "version": "0.3.0-alpha.1",
   "description": "Fast, lightweight, customizable, and modern utility-first CSS framework.",
   "author": "NOuSantx <nousantx@gmail.com>",
   "license": "MIT",
@@ -56,7 +56,7 @@
     "vitest": "^3.0.8"
   },
   "dependencies": {
-    "@tenoxui/moxie": "0.4.3",
+    "@tenoxui/moxie": "0.5.0-alpha.0",
     "@tenoxui/types": "^0.1.2"
   },
   "packageManager": "pnpm@10.4.0"
