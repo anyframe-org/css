@@ -33,6 +33,7 @@ export class AnyCSS {
   private componentsConfig: ApplyStyleObject
   private safelist: string[]
   private layers: Map<string, string>
+  private classNamePrefix: string
 
   constructor({
     sizing = 0.25,
@@ -56,7 +57,8 @@ export class AnyCSS {
     components = {},
     safelist = [],
     moxie = Moxie,
-    moxieOptions = {}
+    moxieOptions = {},
+    classNamePrefix = ''
   }: Partial<Config> = {}) {
     this.tabSize = tabSize
     this.useLayer = showLayerDirective
@@ -78,6 +80,7 @@ export class AnyCSS {
     this.themeConfig = theme
     this.baseConfig = base
     this.componentsConfig = components
+    this.classNamePrefix = classNamePrefix
     this.layers = new Map<string, string>([
       ['theme', ''],
       ['base', ''],
@@ -394,7 +397,16 @@ export class AnyCSS {
 
     for (const key in obj) {
       const value = obj[key]
-      css += key ? `${this.addTabs(key, this.tabSize * indentLevel, true)} {\n` : ''
+      css += key
+        ? `${this.addTabs(
+            key
+              .split(',')
+              .map((name) => this.classNamePrefix + name.trim())
+              .join(', '),
+            this.tabSize * indentLevel,
+            true
+          )} {\n`
+        : ''
 
       if (typeof value === 'string') {
         const rules = this.generateRulesFromClass(value)
@@ -419,11 +431,16 @@ export class AnyCSS {
     if (!prefix) {
       return rulesOnly
         ? rules + finalValue + ';'
-        : `${selector} {\n${this.addTabs(rules + finalValue, this.tabSize)}\n}`
+        : `${this.classNamePrefix}${selector} {\n${this.addTabs(
+            rules + finalValue,
+            this.tabSize
+          )}\n}`
     }
 
     const cssWrapper = this.generateCSSWrapper(prefix, rules, finalValue)
-    return rulesOnly ? cssWrapper : `${selector} {\n${this.addTabs(cssWrapper, this.tabSize)}\n}`
+    return rulesOnly
+      ? cssWrapper
+      : `${this.classNamePrefix}${selector} {\n${this.addTabs(cssWrapper, this.tabSize)}\n}`
   }
 
   public addStyle(layer: string = 'base', config: ApplyStyleObject = {}): this {
@@ -504,7 +521,9 @@ export class AnyCSS {
           } else finalRules = rules
 
           storedRules.push(
-            `.${this.main.escapeCSSSelector(className)} {\n${this.addTabs(finalRules)}\n}\n`
+            `${this.classNamePrefix}.${this.main.escapeCSSSelector(className)} {\n${this.addTabs(
+              finalRules
+            )}\n}\n`
           )
           return
         }
