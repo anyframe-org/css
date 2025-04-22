@@ -6,7 +6,8 @@ export const filterProperty = (sizing: number): Property => ({
   blur: {
     property: 'filter',
     group: 'anc-blur-value',
-    value: ({ value = '', unit = '' }) => {
+    value: ({ value = '', unit = '', secondValue = '' }) => {
+      if (secondValue) return null
       if (!value) return 'blur(10px)'
       const inputValue = value + unit
       return `blur(${
@@ -20,13 +21,20 @@ export const filterProperty = (sizing: number): Property => ({
       })`
     }
   },
-  brightness: ({ value }) => `value:filter: brightness(${value}%)` as GetCSSProperty,
-  contrast: ({ value }) => `value:filter: contrast(${value}%)` as GetCSSProperty,
-  saturate: ({ value }) => `value:filter: saturate(${value}%)` as GetCSSProperty,
-  sepia: ({ value }) => `value:filter: sepia(${!value ? '100' : value}%)` as GetCSSProperty,
-  grayscale: ({ value }) => `value:filter: grayscale(${!value ? '100' : value}%)` as GetCSSProperty,
-  invert: ({ value }) => `value:filter: inverlt(${!value ? '100' : value}%)` as GetCSSProperty,
-  'hue-rotate': ({ value = '', unit = '' }) => {
+  brightness: ({ value, secondValue }) =>
+    secondValue ? null : (`value:filter: brightness(${value}%)` as GetCSSProperty),
+  contrast: ({ value, secondValue }) =>
+    !value || secondValue ? null : (`value:filter: contrast(${value}%)` as GetCSSProperty),
+  saturate: ({ value, secondValue }) =>
+    !value || secondValue ? null : (`value:filter: saturate(${value}%)` as GetCSSProperty),
+  sepia: ({ value, secondValue }) =>
+    secondValue ? null : (`value:filter: sepia(${!value ? '100' : value}%)` as GetCSSProperty),
+  grayscale: ({ value, secondValue }) =>
+    secondValue ? null : (`value:filter: grayscale(${!value ? '100' : value}%)` as GetCSSProperty),
+  invert: ({ value, secondValue }) =>
+    secondValue ? null : (`value:filter: inverlt(${!value ? '100' : value}%)` as GetCSSProperty),
+  'hue-rotate': ({ value = '', unit = '', secondValue }) => {
+    if (!value || secondValue) return null
     let finalValue
 
     if (is.angle.test(value + unit)) finalValue = value + unit
@@ -38,7 +46,8 @@ export const filterProperty = (sizing: number): Property => ({
   'backdrop-blur': {
     property: 'backdropFilter',
     group: 'anc-blur-value',
-    value: ({ value = '', unit = '' }) => {
+    value: ({ value = '', unit = '', secondValue }) => {
+      if (secondValue) return null
       if (!value) return 'blur(10px)'
       const inputValue = value + unit
       return `blur(${
@@ -52,19 +61,28 @@ export const filterProperty = (sizing: number): Property => ({
       })`
     }
   },
-  'backdrop-brightness': ({ value }) =>
-    `value:backdrop-filter: brightness(${value}%)` as GetCSSProperty,
-  'backdrop-contrast': ({ value }) =>
-    `value:backdrop-filter: contrast(${value}%)` as GetCSSProperty,
-  'backdrop-saturate': ({ value }) =>
-    `value:backdrop-filter: saturate(${value}%)` as GetCSSProperty,
-  'backdrop-sepia': ({ value }) =>
-    `value:backdrop-filter: sepia(${!value ? '100' : value}%)` as GetCSSProperty,
-  'backdrop-grayscale': ({ value }) =>
-    `value:backdrop-filter: grayscale(${!value ? '100' : value}%)` as GetCSSProperty,
-  'backdrop-invert': ({ value }) =>
-    `value:backdrop-filter: invert(${!value ? '100' : value}%)` as GetCSSProperty,
-  'backdrop-hue-rotate': ({ value = '', unit = '' }) => {
+  'backdrop-brightness': ({ value, secondValue }) =>
+    !value || secondValue
+      ? null
+      : (`value:backdrop-filter: brightness(${value}%)` as GetCSSProperty),
+  'backdrop-contrast': ({ value, secondValue }) =>
+    !value || secondValue ? null : (`value:backdrop-filter: contrast(${value}%)` as GetCSSProperty),
+  'backdrop-saturate': ({ value, secondValue }) =>
+    !value || secondValue ? null : (`value:backdrop-filter: saturate(${value}%)` as GetCSSProperty),
+  'backdrop-sepia': ({ value, secondValue }) =>
+    secondValue
+      ? null
+      : (`value:backdrop-filter: sepia(${!value ? '100' : value}%)` as GetCSSProperty),
+  'backdrop-grayscale': ({ value, secondValue }) =>
+    secondValue
+      ? null
+      : (`value:backdrop-filter: grayscale(${!value ? '100' : value}%)` as GetCSSProperty),
+  'backdrop-invert': ({ value, secondValue }) =>
+    secondValue
+      ? null
+      : (`value:backdrop-filter: invert(${!value ? '100' : value}%)` as GetCSSProperty),
+  'backdrop-hue-rotate': ({ value = '', unit = '', secondValue }) => {
+    if (!value || secondValue) return null
     let finalValue
     if (is.angle.test(value + unit)) finalValue = value + unit
     else finalValue = value + 'deg'

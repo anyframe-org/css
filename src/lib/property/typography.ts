@@ -21,7 +21,7 @@ export const typographyProperty = (sizing: number): Property => {
         unit = '',
         secondValue = '',
         secondUnit = ''
-      }: PropertyParams): GetCSSProperty => {
+      }: PropertyParams) => {
         type SizesType = Record<string, string[]>
 
         const sizes: SizesType = {
@@ -40,52 +40,50 @@ export const typographyProperty = (sizing: number): Property => {
           '9xl': ['8rem', '1']
         }
 
-        if (value) {
-          if (
-            key === 'color' ||
-            is.color.test(value) ||
-            (['inherit', 'current', 'black', 'white', 'transparent'].includes(value) &&
-              key !== 'size')
-          ) {
-            return `value:color: ${createColor(value, secondValue, secondUnit)}` as GetCSSProperty
-          } else if (
-            key === 'align' ||
-            ['center', 'justify', 'left', 'right', 'start', 'end'].includes(value)
-          ) {
-            return `value:text-align: ${value}` as GetCSSProperty
-          } else if (key === 'wrap' || ['wrap', 'nowrap', 'balance', 'pretty'].includes(value)) {
-            return `value:text-wrap: ${value}` as GetCSSProperty
-          } else if (key === 'overflow' || ['ellipsis', 'clip'].includes(value)) {
-            return `value:text-overflow: ${value}` as GetCSSProperty
-          } else if (
-            key === 'size' ||
-            is.length.test(value + unit) ||
-            is.number.test(value + unit) ||
-            value + unit in sizes
-          ) {
-            if (value + unit in sizes) {
-              const sizeKey = (value + unit) as keyof SizesType
+        if (
+          key === 'color' ||
+          is.color.test(value) ||
+          (['inherit', 'current', 'black', 'white', 'transparent'].includes(value) &&
+            key !== 'size')
+        ) {
+          return `value:color: ${createColor(value, secondValue, secondUnit)}` as GetCSSProperty
+        } else if (
+          key === 'align' ||
+          ['center', 'justify', 'left', 'right', 'start', 'end'].includes(value)
+        ) {
+          return secondUnit ? null : (`value:text-align: ${value}` as GetCSSProperty)
+        } else if (key === 'wrap' || ['wrap', 'nowrap', 'balance', 'pretty'].includes(value)) {
+          return secondUnit ? null : (`value:text-wrap: ${value}` as GetCSSProperty)
+        } else if (key === 'overflow' || ['ellipsis', 'clip'].includes(value)) {
+          return secondUnit ? null : (`value:text-overflow: ${value}` as GetCSSProperty)
+        } else if (
+          key === 'size' ||
+          is.length.test(value + unit) ||
+          is.number.test(value + unit) ||
+          value + unit in sizes
+        ) {
+          if (value + unit in sizes) {
+            const sizeKey = (value + unit) as keyof SizesType
 
-              const [fontSize, lineHeight] = sizes[sizeKey]
-              return `value:font-size: ${fontSize}; line-height: ${
-                is.number.test(secondValue + secondUnit)
-                  ? sizing * Number(secondValue) + 'rem'
-                  : lineHeightAlias[secondValue] || secondValue + secondUnit || lineHeight
-              }` as GetCSSProperty
-            }
-            return `value:font-size: ${
-              is.number.test(value + unit) ? sizing * Number(value) + 'rem' : value + unit
-            }${
-              secondValue
-                ? `; line-height:
+            const [fontSize, lineHeight] = sizes[sizeKey]
+            return `value:font-size: ${fontSize}; line-height: ${
+              is.number.test(secondValue + secondUnit)
+                ? sizing * Number(secondValue) + 'rem'
+                : lineHeightAlias[secondValue] || secondValue + secondUnit || lineHeight
+            }` as GetCSSProperty
+          }
+          return `value:font-size: ${
+            is.number.test(value + unit) ? sizing * Number(value) + 'rem' : value + unit
+          }${
+            secondValue
+              ? `; line-height:
               ${
                 is.number.test(secondValue + secondUnit)
                   ? sizing * Number(secondValue) + 'rem'
                   : lineHeightAlias[secondValue] || secondValue + secondUnit
               }`
-                : ''
-            }` as GetCSSProperty
-          }
+              : ''
+          }` as GetCSSProperty
         }
         return ('value:color: ' + value) as GetCSSProperty
       },
@@ -93,7 +91,8 @@ export const typographyProperty = (sizing: number): Property => {
     },
     font: {
       value: null,
-      property: ({ key, value }): GetCSSProperty => {
+      property: ({ key, value, secondValue }) => {
+        if (!value || secondValue) return null
         const weightAlias: Record<string, string> = {
           thin: '100',
           extralight: '200',
@@ -106,25 +105,24 @@ export const typographyProperty = (sizing: number): Property => {
           black: '900'
         }
 
-        if (value) {
-          if (
-            key === 'weight' ||
-            weightAlias[value] ||
-            is.number.test(value) ||
-            value.endsWith('00')
-          ) {
-            return `value:font-weight: ${weightAlias[value] || value}` as GetCSSProperty
-          } else if (key === 'family') {
-            return `value:font-family: ${value}` as GetCSSProperty
-          }
+        if (
+          key === 'weight' ||
+          weightAlias[value] ||
+          is.number.test(value) ||
+          value.endsWith('00')
+        ) {
+          return `value:font-weight: ${weightAlias[value] || value}` as GetCSSProperty
+        } else if (key === 'family') {
+          return `value:font-family: ${value}` as GetCSSProperty
         }
+
         return `value:font-family: ${value}` as GetCSSProperty
 
         // return `font-weight: ${weightAlias[value] || value}` as GetCSSProperty
       }
     },
     tracking: {
-      property: 'letterSpacing',
+      property: ({ secondValue }) => (secondValue ? null : 'letterSpacing'),
       value: ({ value = '', unit = '' }) => {
         const values: Record<string, string> = {
           tighter: '-0.05em',
@@ -139,7 +137,7 @@ export const typographyProperty = (sizing: number): Property => {
       }
     },
     leading: {
-      property: 'lineHeight',
+      property: ({ secondValue }) => (secondValue ? null : 'lineHeight'),
       value: ({ value = '', unit = '' }) => {
         if (value === '0') return value
         else if (lineHeightAlias[value]) {
@@ -153,27 +151,27 @@ export const typographyProperty = (sizing: number): Property => {
     },
     decoration: {
       property: ({ key, value = '', unit = '', secondValue = '', secondUnit = '' }) => {
-        if (value) {
-          if (key === 'color' || is.color.test(value)) {
-            return ('value:text-decoration-color: ' +
-              `${value.slice(0, -1)}${
-                secondValue ? ' / ' + secondValue + (secondUnit || '%)') : ')'
-              }`) as GetCSSProperty
-          } else if (
-            key === 'style' ||
-            ['solid', 'dashed', 'double', 'dotted', 'wavy'].includes(value)
-          ) {
-            return `value:text-decoration-style: ${value}` as GetCSSProperty
-          } else if (
-            key === 'length' ||
-            ['auto', 'from-font'].includes(value) ||
-            is.number.test(value + unit) ||
-            is.length.test(value + unit)
-          ) {
-            return `value:text-decoration-thickness: ${
-              is.number.test(value + unit) ? value + 'px' : value + unit
-            }` as GetCSSProperty
-          }
+        if (!value) return null
+
+        if (key === 'color' || is.color.test(value)) {
+          return ('value:text-decoration-color: ' +
+            `${value.slice(0, -1)}${
+              secondValue ? ' / ' + secondValue + (secondUnit || '%)') : ')'
+            }`) as GetCSSProperty
+        } else if (
+          key === 'style' ||
+          ['solid', 'dashed', 'double', 'dotted', 'wavy'].includes(value)
+        ) {
+          return `value:text-decoration-style: ${value}` as GetCSSProperty
+        } else if (
+          key === 'length' ||
+          ['auto', 'from-font'].includes(value) ||
+          is.number.test(value + unit) ||
+          is.length.test(value + unit)
+        ) {
+          return `value:text-decoration-thickness: ${
+            is.number.test(value + unit) ? value + 'px' : value + unit
+          }` as GetCSSProperty
         }
 
         return ('value:text-decoration-color: ' + value) as GetCSSProperty
@@ -181,11 +179,11 @@ export const typographyProperty = (sizing: number): Property => {
       value: null
     },
     'underline-offset': {
-      property: 'textUnderlineOffset',
+      property: ({ unit }) => (unit ? null : 'textUnderlineOffset'),
       value: '{0}px'
     },
     indent: {
-      property: 'textIndent',
+      property: ({ value, secondValue }) => (!value || secondValue ? null : 'textIndent'),
       value: ({ value = '', unit = '' }) => {
         if (value) {
           if (value === '0') return value

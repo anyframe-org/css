@@ -5,15 +5,17 @@ import { createColor } from '@/utils/createColorValue'
 
 export const backgroundProperty: Property = {
   'bg-clip': {
-    property: 'backgroundClip',
+    property: ({ value, secondValue }) => (!value || secondValue ? null : 'backgroundClip'),
     value: ({ value }) => (value !== 'text' ? value + '-box' : value)
   },
   'bg-origin': {
     property: 'backgroundOrigin',
-    value: ({ value }) => (value !== 'text' ? value + '-box' : value)
+    value: ({ value, secondValue }) =>
+      !value || secondValue ? null : value !== 'text' ? value + '-box' : value
   },
   bg: {
-    property: ({ key, value = '', unit = '' }: PropertyParams) => {
+    property: ({ key, value = '', unit = '', secondValue }: PropertyParams) => {
+      if (!value || secondValue) return null
       const keys: Record<string, GetCSSProperty> = {
         attachment: 'backgroundAttachment',
         color: 'backgroundColor',

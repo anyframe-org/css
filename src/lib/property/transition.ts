@@ -5,7 +5,8 @@ import { is } from '@nousantx/someutils'
 export const transitionProperty: Property = {
   transition: {
     value: null,
-    property: ({ key = '', value = '', unit = '' }) => {
+    property: ({ key = '', value = '', unit = '', secondValue }) => {
+      if (secondValue) return null
       if (
         !value ||
         key === 'property' ||
@@ -39,7 +40,8 @@ export const transitionProperty: Property = {
   },
   ease: {
     property: 'transitionTimingFunction',
-    value: ({ value = '' }) => {
+    value: ({ value = '', secondValue }) => {
+      if (secondValue) return null
       const values: Record<string, string> = {
         in: 'cubic-bezier(0.4, 0, 1, 1)',
         out: 'cubic-bezier(0, 0, 0.2, 1)',
@@ -51,14 +53,10 @@ export const transitionProperty: Property = {
   },
   duration: {
     property: 'transitionDuration',
-    value: ({ value = '', unit = '' }) => {
-      return value + (unit || 'ms')
-    }
+    value: ({ value = '', unit = '', secondValue }) => (secondValue ? null : value + (unit || 'ms'))
   },
   delay: {
     property: 'transitionDelay',
-    value: ({ value = '', unit = '' }) => {
-      return value + (unit || 'ms')
-    }
+    value: ({ value = '', unit = '', secondValue }) => (secondValue ? null : value + (unit || 'ms'))
   }
 }
