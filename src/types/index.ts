@@ -36,6 +36,7 @@ export interface Config {
   utilityClass: Classes
   utilityStyle: UtilityStyle
   sizing: number
+  classNamePrefix: string
   colorVariant: ColorFormat
   colors: { [name: string]: string }
   tabSize: number

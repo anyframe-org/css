@@ -38,7 +38,7 @@ export const backgroundProperty: Property = {
         return keys.repeat
       } else if (['cover', 'contain', 'auto'].includes(value) || is.length.test(value + unit)) {
         return keys.size
-      } 
+      }
 
       return 'background'
     },

@@ -268,7 +268,7 @@ export class AnyCSS {
    * Formats CSS rules from cssRules and value
    */
 
-  private formatRules(cssRules: string | string[], value: string | null): string {
+  private formatRules(cssRules: string | string[] | null, value: string | null): string {
     if (Array.isArray(cssRules) && value !== null) {
       return cssRules
         .map((prop: string) =>
