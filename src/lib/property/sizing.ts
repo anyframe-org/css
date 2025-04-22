@@ -1,6 +1,7 @@
 import type { GetCSSProperty } from '@tenoxui/types'
 import type { ValuePropType, PropertyValue, Property } from '@tenoxui/moxie'
 import { is } from '@nousantx/someutils'
+import { toKebabCase } from '@/utils/toKebabCase'
 
 const sizingPropertyMap: Record<string, GetCSSProperty> = {
   w: 'width',
@@ -55,16 +56,18 @@ const sizingPropertyMap: Record<string, GetCSSProperty> = {
 }
 
 export const sizingProperty = (sizing: number): Property => {
-  const value: ValuePropType = ({ value = '', unit = '' }) => {
-    if (is.number.test(value + unit))
-      return value + unit !== '0' ? sizing * Number(value) + 'rem' : '0'
-    return is.length.test(value) ? value : value + unit
-  }
-
   const create = (propertyName: GetCSSProperty): PropertyValue => ({
-    value,
     group: 'container-size',
-    property: propertyName
+    property: ({ value, unit, key, secondValue }) => {
+      if (!value || key || secondValue) return null
+
+      const className = `value:${toKebabCase(propertyName)}: `
+
+      if (is.number.test(value + unit))
+        return className + (value + unit !== '0' ? sizing * Number(value) + 'rem' : '0')
+
+      return className + (is.length.test(value) ? value : value + unit)
+    }
   })
 
   const properties: Property = {}
