@@ -1,6 +1,6 @@
 {
   "name": "@anyframe/css",
-  "version": "0.3.0-alpha.2",
+  "version": "0.3.0",
   "description": "Fast, lightweight, customizable, and modern utility-first CSS framework.",
   "author": "NOuSantx <nousantx@gmail.com>",
   "license": "MIT",
@@ -46,7 +46,7 @@
     "test:watch": "vitest"
   },
   "peerDependencies": {
-    "@tenoxui/moxie": ">=0.4.2"
+    "@tenoxui/moxie": ">=0.5.0"
   },
   "devDependencies": {
     "@nousantx/color-generator": "^1.6.0",
