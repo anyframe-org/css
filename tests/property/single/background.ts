@@ -40,8 +40,8 @@ export const background = {
     'bg-(size:10px_10px)': '10px 10px'
   },
   backgroundPosition: {
-    'bg-center': 'center',
-    'bg-[top_left]': 'top left',
+    // 'bg-center': 'center', // deprecated
+    // 'bg-[top_left]': 'top left', // deprecated
     'bg-[position:top_left]': 'top left'
   }
 }

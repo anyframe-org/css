@@ -13,7 +13,7 @@ describe('Classes generation test', () => {
     Object.entries(classNames).forEach(([property, classTests]) => {
       Object.entries(classTests).forEach(([className, expectedValue]) => {
         const rendered = ui.render(className)
-        // console.log(rendered)
+
         expect(rendered).toContain(`${ui.main.toKebabCase(property)}: ${expectedValue}`)
       })
     })

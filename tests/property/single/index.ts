@@ -3,14 +3,14 @@ import { display } from './display'
 import { background } from './background'
 import { border } from './border'
 import { typography } from './typography'
+import { sizing } from './sizing'
 
 export const classNames = merge(
-  {
-    display,
-    ...background,
-    ...border,
-    ...typography
-  },
+  { display },
+  background,
+  border,
+  typography,
+  sizing,
   transformClasses({
     'text-xl/loose': {
       fontSize: '1.25rem',
