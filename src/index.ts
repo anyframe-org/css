@@ -491,6 +491,38 @@ export class AnyCSS {
     return styles
   }
 
+  public process(classNames: string | string[]):
+    | Partial<{
+        className: string
+        cssRules: string | string[] | null
+        value: string | null
+        variants: null | { name: string; data: string }
+        raw: null | (string | undefined)[]
+      }>[]
+    | null {
+    const classes = classNames
+      ? Array.isArray(classNames)
+        ? classNames
+        : classNames.split(/\s+/).filter(Boolean)
+      : []
+
+    if (!classes || 1 > classes.length) return null
+
+    const data = this.main.process(classes).map((item) => {
+      const { className, cssRules, value, prefix, raw } = item
+
+      return {
+        className: raw ? raw[6] : className,
+        cssRules,
+        value,
+        variants: prefix ? { name: prefix, data: this.generatePrefix(prefix).prefix } : null,
+        raw
+      }
+    })
+
+    return data
+  }
+
   public render(classNames?: string | string[]): string {
     const classes = [
       ...this.safelist,
