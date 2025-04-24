@@ -71,7 +71,10 @@ export const sizingProperty = (sizing: number): Property => {
             : value + unit
 
         if (Array.isArray(propertyName)) {
-          return 'value:' + propertyName.map((p) => toKebabCase(p) + ': ' + finalValue).join('; ')
+          return (
+            'value:' +
+            propertyName.map((p) => toKebabCase(p as string) + ': ' + finalValue).join('; ')
+          )
         }
 
         return `value:${toKebabCase(propertyName as string)}: ${finalValue}`
