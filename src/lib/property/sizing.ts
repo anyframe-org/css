@@ -62,12 +62,19 @@ export const sizingProperty = (sizing: number): Property => {
       property: ({ value, unit, key, secondValue }) => {
         if (!value || key || secondValue) return null
 
-        const className = `value:${toKebabCase(propertyName as string)}: `
+        const finalValue = is.length.test(value)
+          ? value
+          : is.number.test(value + unit)
+            ? value + unit !== '0'
+              ? sizing * Number(value) + 'rem'
+              : '0'
+            : value + unit
 
-        if (is.number.test(value + unit))
-          return className + (value + unit !== '0' ? sizing * Number(value) + 'rem' : '0')
+        if (Array.isArray(propertyName)) {
+          return 'value:' + propertyName.map((p) => toKebabCase(p) + ': ' + finalValue).join('; ')
+        }
 
-        return className + (is.length.test(value) ? value : value + unit)
+        return `value:${toKebabCase(propertyName as string)}: ${finalValue}`
       }
     }) as PropertyValue
 
